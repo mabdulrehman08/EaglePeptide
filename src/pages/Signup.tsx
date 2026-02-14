@@ -1,7 +1,10 @@
 import { useState } from "react";
 import { supabase } from "../lib/supabase";
+import { Link } from "react-router-dom";
 
 export default function Signup() {
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -15,49 +18,106 @@ export default function Signup() {
     const { error } = await supabase.auth.signUp({
       email,
       password,
+      options: {
+        data: {
+          first_name: firstName,
+          last_name: lastName,
+          full_name: `${firstName} ${lastName}`,
+        },
+      },
     });
 
-    if (error) {
-      setError(error.message);
-    } else {
-      alert("Check your email to confirm your account");
-    }
+    if (error) setError(error.message);
+    else alert("Account created! You can now log in.");
 
     setLoading(false);
   };
 
+  const handleGoogle = async () => {
+    await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: { redirectTo: window.location.origin },
+    });
+  };
+
   return (
-    <div className="max-w-md mx-auto py-16">
-      <h1 className="text-2xl font-bold mb-6">Create account</h1>
+    <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white flex items-center justify-center px-4">
+      <div className="bg-white rounded-2xl shadow-sm p-10 w-full max-w-md">
 
-      <form onSubmit={handleSignup} className="space-y-4">
-        <input
-          type="email"
-          placeholder="Email"
-          className="w-full border px-4 py-2 rounded"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
+        <h1 className="text-2xl font-bold text-gray-900 mb-1">Create Account</h1>
+        <p className="text-sm text-gray-500 mb-8">
+          Already have an account?{" "}
+          <Link to="/login" className="text-blue-600 hover:underline">
+            Log in
+          </Link>
+        </p>
 
-        <input
-          type="password"
-          placeholder="Password"
-          className="w-full border px-4 py-2 rounded"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
-
+        {/* Google Button */}
         <button
-          className="w-full bg-blue-600 text-white py-2 rounded"
-          disabled={loading}
+          onClick={handleGoogle}
+          className="w-full flex items-center justify-center gap-3 border border-gray-200 rounded-md py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 transition mb-6"
         >
-          {loading ? "Creating..." : "Sign Up"}
+          <img src="https://www.google.com/favicon.ico" className="h-4 w-4" />
+          Continue with Google
         </button>
 
-        {error && <p className="text-red-600">{error}</p>}
-      </form>
+        {/* Divider */}
+        <div className="flex items-center gap-3 mb-6">
+          <div className="flex-1 h-px bg-gray-200" />
+          <span className="text-xs text-gray-400">or sign up with email</span>
+          <div className="flex-1 h-px bg-gray-200" />
+        </div>
+
+        {/* Form */}
+        <form onSubmit={handleSignup} className="space-y-4">
+          <div className="flex gap-3">
+            <input
+              type="text"
+              placeholder="First Name"
+              className="w-full border border-gray-200 px-4 py-2.5 rounded-md text-sm focus:outline-none focus:border-blue-400"
+              value={firstName}
+              onChange={(e) => setFirstName(e.target.value)}
+              required
+            />
+            <input
+              type="text"
+              placeholder="Last Name"
+              className="w-full border border-gray-200 px-4 py-2.5 rounded-md text-sm focus:outline-none focus:border-blue-400"
+              value={lastName}
+              onChange={(e) => setLastName(e.target.value)}
+              required
+            />
+          </div>
+
+          <input
+            type="email"
+            placeholder="Email"
+            className="w-full border border-gray-200 px-4 py-2.5 rounded-md text-sm focus:outline-none focus:border-blue-400"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+
+          <input
+            type="password"
+            placeholder="Password"
+            className="w-full border border-gray-200 px-4 py-2.5 rounded-md text-sm focus:outline-none focus:border-blue-400"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+
+          {error && <p className="text-red-600 text-sm">{error}</p>}
+
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full bg-blue-600 text-white py-2.5 rounded-md font-medium hover:bg-blue-700 transition disabled:opacity-50"
+          >
+            {loading ? "Creating account..." : "Create Account"}
+          </button>
+        </form>
+      </div>
     </div>
   );
 }

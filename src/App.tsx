@@ -9,6 +9,8 @@ import Account from "./pages/Account";
 import Cart from "./pages/Cart";
 import Success from "./pages/Success";
 import RequireAuth from "./components/RequireAuth";
+import About from "./pages/About";
+
 
 function App() {
   return (
@@ -23,6 +25,8 @@ function App() {
           <Route path="/signup" element={<Signup />} />
           <Route path="/account" element={<Account />} />
           <Route path="/success" element={<Success />} />
+          <Route path="/about" element={<About />} />
+          
           <Route
             path="/cart"
             element={
@@ -30,6 +34,7 @@ function App() {
                 <Cart />
               </RequireAuth>
             }
+            
           />
         </Routes>
       </main>
