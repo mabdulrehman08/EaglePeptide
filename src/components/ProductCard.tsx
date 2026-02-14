@@ -6,6 +6,7 @@ type ProductCardProps = {
   vials: number;
   price: string;
   slug: string;
+  image: string;
 };
 
 export default function ProductCard({
@@ -14,20 +15,28 @@ export default function ProductCard({
   vials,
   price,
   slug,
+  image,
 }: ProductCardProps) {
   return (
-    <Link to={`/products/${slug}`} className="border rounded-xl p-6 hover:shadow-lg transition block">
-      <div className="h-40 bg-gray-100 rounded-lg mb-4 flex items-center justify-center text-gray-400">
-        Product Image
+    <Link
+      to={`/products/${slug}`}
+      className="min-w-[240px] bg-white border border-gray-100 rounded-2xl p-5 hover:shadow-xl transition block flex-shrink-0"
+    >
+      <div className="h-48 bg-pink-50 rounded-xl mb-4 overflow-hidden flex items-center justify-center">
+        <img
+          src={image}
+          alt={name}
+          className="h-full w-full object-contain p-2"
+        />
       </div>
 
-      <h3 className="text-lg font-semibold">{name}</h3>
+      <h3 className="text-base font-semibold text-gray-900">{name}</h3>
       <p className="text-sm text-gray-500 mt-1">
-        {dosage} • {vials} vials
+        {dosage} • {vials} vial{vials > 1 ? "s" : ""}
       </p>
+      <p className="text-xl font-bold text-blue-900 mt-3">{price}</p>
 
-      <p className="text-xl font-bold mt-4">{price}</p>
+      <div className="mt-3 text-xs text-gray-400">Research Use Only</div>
     </Link>
   );
 }
-

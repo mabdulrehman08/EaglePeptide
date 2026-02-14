@@ -1,45 +1,186 @@
+import { useEffect, useState } from "react";
+import { supabase } from "../lib/supabase";
 import ProductCard from "../components/ProductCard";
 
+import retatrutide from "../assets/retatrutide.jpg";
+import mt2 from "../assets/mt2.jpg";
+import ipamorelin from "../assets/ipamorelin.jpg";
+import cjc1295 from "../assets/cjc1295.jpg";
+import ghkcu from "../assets/ghkcu.jpg";
+import glp3 from "../assets/glp3.jpg";
+import bpc157 from "../assets/bpc157.jpg";
+import bacwater from "../assets/bacwater.jpg";
+
+const imageMap: Record<string, string> = {
+  "retatrutide": retatrutide,
+  "melanotan-ii": mt2,
+  "ipamorelin": ipamorelin,
+  "cjc-1295": cjc1295,
+  "ghk-cu": ghkcu,
+  "glp-3": glp3,
+  "bpc-157": bpc157,
+  "bac-water": bacwater,
+};
+
+type Product = {
+  id: string;
+  name: string;
+  slug: string;
+  dosage: string;
+  vials: number;
+  price: number;
+};
+
 export default function Home() {
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const loadProducts = async () => {
+      const { data, error } = await supabase
+        .from("products")
+        .select("id, name, slug, dosage, vials, price")
+        .order("created_at", { ascending: false });
+
+      if (error) {
+        console.error("Error loading products:", error);
+      } else {
+        setProducts(data || []);
+      }
+
+      setLoading(false);
+    };
+
+    loadProducts();
+  }, []);
+
   return (
     <>
       {/* HERO */}
-      <section className="py-24 grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-        <div>
-          <h1 className="text-5xl font-extrabold leading-tight">
-            Premium <span className="text-blue-600">Research Peptides</span>
-          </h1>
+      <section className="py-28 bg-gradient-to-b from-blue-50 to-white">
+        <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+          
+          <div>
+            <h1 className="text-5xl font-extrabold leading-tight text-gray-900">
+              Premium{" "}
+              <span className="text-blue-600">Research Peptides</span>
+            </h1>
 
-          <p className="mt-6 text-lg text-gray-600 max-w-xl">
-            High-purity compounds manufactured for research purposes only.
-            Trusted by researchers worldwide.
-          </p>
+            <p className="mt-6 text-lg text-gray-600 max-w-xl">
+              High-purity compounds manufactured for laboratory research only.
+              Trusted by professionals worldwide.
+            </p>
 
-          <div className="mt-8 flex gap-4">
-            <button className="px-6 py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition">
-              Shop Products
-            </button>
+            <div className="mt-8 flex gap-4">
+              <a
+                href="#products"
+                className="px-6 py-3 bg-blue-600 text-white rounded-md font-medium hover:bg-blue-700 transition shadow-sm"
+              >
+                Shop Products
+              </a>
 
-            <button className="px-6 py-3 border border-gray-300 rounded-lg font-medium hover:border-gray-400 transition">
-              Learn More
-            </button>
+              <a
+                href="/about"
+                className="px-6 py-3 border border-blue-200 text-blue-700 rounded-md font-medium hover:bg-blue-50 transition"
+              >
+                Learn More
+              </a>
+            </div>
           </div>
-        </div>
 
-        <div className="bg-gray-100 rounded-2xl h-80 flex items-center justify-center text-gray-400">
-          Product Image Placeholder
+          <div className="rounded-2xl h-80 overflow-hidden flex items-center justify-center bg-pink-50">
+            <img
+              src={retatrutide}
+              alt="Eagle Peptides"
+              className="h-full w-full object-contain p-6"
+            />
+          </div>
+
+        </div>
+      </section>
+
+      {/* TRUST BADGES */}
+      <section className="bg-blue-900 py-8">
+        <div className="max-w-7xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-6 text-center text-white text-sm">
+          <div>
+            <p className="text-2xl font-bold text-red-400">✓</p>
+            <p className="mt-1 font-semibold">US Manufactured</p>
+            <p className="text-blue-300 text-xs mt-1">
+              cGMP compliant facility
+            </p>
+          </div>
+
+          <div>
+            <p className="text-2xl font-bold text-red-400">✓</p>
+            <p className="mt-1 font-semibold">3rd Party Tested</p>
+            <p className="text-blue-300 text-xs mt-1">
+              Every batch verified
+            </p>
+          </div>
+
+          <div>
+            <p className="text-2xl font-bold text-red-400">✓</p>
+            <p className="mt-1 font-semibold">Same Day Shipping</p>
+            <p className="text-blue-300 text-xs mt-1">
+              Orders before 3PM ET
+            </p>
+          </div>
+
+          <div>
+            <p className="text-2xl font-bold text-red-400">✓</p>
+            <p className="mt-1 font-semibold">30-Day Guarantee</p>
+            <p className="text-blue-300 text-xs mt-1">
+              Full money back
+            </p>
+          </div>
         </div>
       </section>
 
       {/* PRODUCTS */}
-      <section className="py-20">
-        <h2 className="text-3xl font-bold mb-10">Featured Products</h2>
+      <section id="products" className="py-24 bg-white">
+        <div className="max-w-7xl mx-auto px-6">
+          <h2 className="text-3xl font-bold mb-12 text-gray-900">
+            Featured Products
+          </h2>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
-          <ProductCard name="Retatrutide" dosage="10mg" vials={20} price="$499" slug="retatrutide" />
-          <ProductCard name="MT-2" dosage="10mg" vials={20} price="$299" slug="mt2" />
-          <ProductCard name="IP" dosage="10mg" vials={20} price="$349" slug="ip" />
-          <ProductCard name="CJC (No DAC)" dosage="10mg" vials={20} price="$399" slug="cjc-no-dac" />
+          {loading && (
+            <p className="text-center text-gray-500">
+              Loading products…
+            </p>
+          )}
+
+          {!loading && products.length === 0 && (
+            <p className="text-center text-gray-500">
+              No products available at the moment.
+            </p>
+          )}
+
+          {!loading && products.length > 0 && (
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
+              {products.map((p) => (
+                <ProductCard
+                  key={p.id}
+                  name={p.name}
+                  dosage={p.dosage}
+                  vials={p.vials}
+                  price={`$${p.price}`}
+                  slug={p.slug}
+                  image={imageMap[p.slug] ?? retatrutide}
+                />
+              ))}
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* DISCLAIMER */}
+      <section className="py-10 bg-white">
+        <div className="max-w-7xl mx-auto px-6">
+          <p className="text-xs text-gray-400 text-center max-w-3xl mx-auto">
+            ⚠️ All products are intended strictly for laboratory research purposes only.
+            Not for human consumption, medical, or veterinary use. Must be 18+ to purchase.
+            These statements have not been evaluated by the FDA.
+          </p>
         </div>
       </section>
     </>
