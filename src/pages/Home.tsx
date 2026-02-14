@@ -59,11 +59,9 @@ export default function Home() {
       {/* HERO */}
       <section className="py-28 bg-gradient-to-b from-blue-50 to-white">
         <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
-          
           <div>
             <h1 className="text-5xl font-extrabold leading-tight text-gray-900">
-              Premium{" "}
-              <span className="text-blue-600">Research Peptides</span>
+              Premium <span className="text-blue-600">Research Peptides</span>
             </h1>
 
             <p className="mt-6 text-lg text-gray-600 max-w-xl">
@@ -91,47 +89,9 @@ export default function Home() {
           <div className="rounded-2xl h-80 overflow-hidden flex items-center justify-center bg-pink-50">
             <img
               src={retatrutide}
-              alt="Eagle Peptides"
+              alt="Featured Product"
               className="h-full w-full object-contain p-6"
             />
-          </div>
-
-        </div>
-      </section>
-
-      {/* TRUST BADGES */}
-      <section className="bg-blue-900 py-8">
-        <div className="max-w-7xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-6 text-center text-white text-sm">
-          <div>
-            <p className="text-2xl font-bold text-red-400">✓</p>
-            <p className="mt-1 font-semibold">US Manufactured</p>
-            <p className="text-blue-300 text-xs mt-1">
-              cGMP compliant facility
-            </p>
-          </div>
-
-          <div>
-            <p className="text-2xl font-bold text-red-400">✓</p>
-            <p className="mt-1 font-semibold">3rd Party Tested</p>
-            <p className="text-blue-300 text-xs mt-1">
-              Every batch verified
-            </p>
-          </div>
-
-          <div>
-            <p className="text-2xl font-bold text-red-400">✓</p>
-            <p className="mt-1 font-semibold">Same Day Shipping</p>
-            <p className="text-blue-300 text-xs mt-1">
-              Orders before 3PM ET
-            </p>
-          </div>
-
-          <div>
-            <p className="text-2xl font-bold text-red-400">✓</p>
-            <p className="mt-1 font-semibold">30-Day Guarantee</p>
-            <p className="text-blue-300 text-xs mt-1">
-              Full money back
-            </p>
           </div>
         </div>
       </section>
@@ -144,29 +104,25 @@ export default function Home() {
           </h2>
 
           {loading && (
-            <p className="text-center text-gray-500">
-              Loading products…
-            </p>
-          )}
-
-          {!loading && products.length === 0 && (
-            <p className="text-center text-gray-500">
-              No products available at the moment.
-            </p>
+            <p className="text-center text-gray-500">Loading products…</p>
           )}
 
           {!loading && products.length > 0 && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
+            <div className="flex gap-6 overflow-x-auto snap-x snap-mandatory pb-4">
               {products.map((p) => (
-                <ProductCard
+                <div
                   key={p.id}
-                  name={p.name}
-                  dosage={p.dosage}
-                  vials={p.vials}
-                  price={`$${p.price}`}
-                  slug={p.slug}
-                  image={imageMap[p.slug] ?? retatrutide}
-                />
+                  className="min-w-[260px] snap-start flex-shrink-0"
+                >
+                  <ProductCard
+                    name={p.name}
+                    dosage={p.dosage}
+                    vials={p.vials}
+                    price={`$${p.price}`}
+                    slug={p.slug}
+                    image={imageMap[p.slug] ?? retatrutide}
+                  />
+                </div>
               ))}
             </div>
           )}
@@ -179,7 +135,6 @@ export default function Home() {
           <p className="text-xs text-gray-400 text-center max-w-3xl mx-auto">
             ⚠️ All products are intended strictly for laboratory research purposes only.
             Not for human consumption, medical, or veterinary use. Must be 18+ to purchase.
-            These statements have not been evaluated by the FDA.
           </p>
         </div>
       </section>

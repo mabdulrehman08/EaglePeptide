@@ -1,21 +1,15 @@
-import { Link } from "react-router-dom";
-import logo from "../assets/logo.png";
-
 export default function Footer() {
   return (
     <footer className="bg-blue-900 mt-24">
       <div className="max-w-7xl mx-auto px-6 py-10 text-sm text-white">
         <div className="flex flex-col md:flex-row justify-between gap-6">
-
+          
           {/* Brand */}
           <div>
-            <Link to="/" className="flex items-center gap-2">
-              <img src={logo} alt="Eagle Peptides" className="h-8 w-auto" />
-              <span className="text-xl font-bold text-white tracking-tight">
-                Eagle<span className="text-red-400">Peptide</span>
-              </span>
-            </Link>
-            <p className="mt-3 max-w-sm text-blue-200">
+            <h3 className="font-bold text-xl text-white tracking-wide">
+              🦅 EaglePeptide
+            </h3>
+            <p className="mt-2 max-w-sm text-blue-200">
               Premium research peptides manufactured for laboratory and
               research use only.
             </p>

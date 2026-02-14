@@ -69,7 +69,7 @@ export default function Navbar() {
           ) : (
             <div className="flex items-center gap-5">
               <Link to="/cart" className="hover:text-white transition">
-                 Cart
+                🛒 Cart
               </Link>
               <Link to="/account" className="hover:text-white transition">
                 Account
