@@ -3,18 +3,37 @@ import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
 import ProductDetail from "./pages/ProductDetail";
 import Footer from "./components/Footer";
+import Login from "./pages/Login";
+import Signup from "./pages/Signup";
+import Account from "./pages/Account";
+import Cart from "./pages/Cart";
+import Success from "./pages/Success";
+import RequireAuth from "./components/RequireAuth";
 
 function App() {
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen flex flex-col">
       <Navbar />
 
-      <main className="max-w-7xl mx-auto px-6">
+      <main className="flex-1">
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/products/:slug" element={<ProductDetail />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/account" element={<Account />} />
+          <Route path="/success" element={<Success />} />
+          <Route
+            path="/cart"
+            element={
+              <RequireAuth>
+                <Cart />
+              </RequireAuth>
+            }
+          />
         </Routes>
       </main>
+
       <Footer />
     </div>
   );
