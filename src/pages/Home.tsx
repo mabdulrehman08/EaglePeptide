@@ -108,12 +108,9 @@ export default function Home() {
           )}
 
           {!loading && products.length > 0 && (
-            <div className="flex gap-6 overflow-x-auto snap-x snap-mandatory pb-4">
-              {products.map((p) => (
-                <div
-                  key={p.id}
-                  className="min-w-[260px] snap-start flex-shrink-0"
-                >
+           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+  {products.map((p) => (
+    <div key={p.id}>
                   <ProductCard
                     name={p.name}
                     dosage={p.dosage}
