@@ -12,9 +12,9 @@ import bpc157 from "../assets/bpc157.jpg";
 import bacwater from "../assets/bacwater.jpg";
 
 const imageMap: Record<string, string> = {
-  "retatrutide": retatrutide,
+  retatrutide: retatrutide,
   "melanotan-ii": mt2,
-  "ipamorelin": ipamorelin,
+  ipamorelin: ipamorelin,
   "cjc-1295": cjc1295,
   "ghk-cu": ghkcu,
   "glp-3": glp3,
@@ -55,20 +55,18 @@ export default function Home() {
   }, []);
 
   return (
-    <>
-      {/* HERO */}
-      <section className="py-28 bg-gradient-to-b from-blue-50 to-white">
+    <main className="min-h-screen bg-white dark:bg-gray-950">
+      {/* HERO - remove bottom padding to eliminate gap */}
+      <section className="pt-28 pb-0 md:pb-4 bg-gradient-to-b from-blue-50 to-white dark:from-gray-900 dark:to-gray-950">
         <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
-          <div>
-            <h1 className="text-5xl font-extrabold leading-tight text-gray-900">
-              Premium <span className="text-blue-600">Research Peptides</span>
+          <div className="pb-4 md:pb-8"> {/* slight inner bottom padding if needed */}
+            <h1 className="text-5xl font-extrabold leading-tight text-gray-900 dark:text-white">
+              Premium <span className="text-blue-600 dark:text-blue-400">Research Peptides</span>
             </h1>
-
-            <p className="mt-6 text-lg text-gray-600 max-w-xl">
+            <p className="mt-6 text-lg text-gray-600 dark:text-gray-400 max-w-xl">
               High-purity compounds manufactured for laboratory research only.
               Trusted by professionals worldwide.
             </p>
-
             <div className="mt-8 flex gap-4">
               <a
                 href="#products"
@@ -76,17 +74,16 @@ export default function Home() {
               >
                 Shop Products
               </a>
-
               <a
                 href="/about"
-                className="px-6 py-3 border border-blue-200 text-blue-700 rounded-md font-medium hover:bg-blue-50 transition"
+                className="px-6 py-3 border border-blue-200 dark:border-blue-700 text-blue-700 dark:text-blue-400 rounded-md font-medium hover:bg-blue-50 dark:hover:bg-blue-900 transition"
               >
                 Learn More
               </a>
             </div>
           </div>
 
-          <div className="rounded-2xl h-80 overflow-hidden flex items-center justify-center bg-pink-50">
+          <div className="rounded-2xl h-80 overflow-hidden flex items-center justify-center bg-pink-50 dark:bg-gray-800">
             <img
               src={retatrutide}
               alt="Featured Product"
@@ -96,21 +93,26 @@ export default function Home() {
         </div>
       </section>
 
-      {/* PRODUCTS */}
-      <section id="products" className="py-24 bg-white">
+      {/* PRODUCTS - pull up to meet hero exactly */}
+      <section 
+        id="products" 
+        className="-mt-12 md:-mt-16 lg:-mt-20 pt-12 md:pt-16 lg:pt-20 bg-white dark:bg-gray-950"
+      >
         <div className="max-w-7xl mx-auto px-6">
-          <h2 className="text-3xl font-bold mb-12 text-gray-900">
+          <h2 className="text-3xl font-bold mb-12 text-gray-900 dark:text-white">
             Featured Products
           </h2>
 
           {loading && (
-            <p className="text-center text-gray-500">Loading products…</p>
+            <p className="text-center text-gray-500 dark:text-gray-400">
+              Loading products…
+            </p>
           )}
 
           {!loading && products.length > 0 && (
-           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-  {products.map((p) => (
-    <div key={p.id}>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              {products.map((p) => (
+                <div key={p.id}>
                   <ProductCard
                     name={p.name}
                     dosage={p.dosage}
@@ -127,14 +129,14 @@ export default function Home() {
       </section>
 
       {/* DISCLAIMER */}
-      <section className="py-10 bg-white">
+      <section className="py-10 bg-white dark:bg-gray-950">
         <div className="max-w-7xl mx-auto px-6">
-          <p className="text-xs text-gray-400 text-center max-w-3xl mx-auto">
+          <p className="text-xs text-gray-400 dark:text-gray-500 text-center max-w-3xl mx-auto">
             ⚠️ All products are intended strictly for laboratory research purposes only.
             Not for human consumption, medical, or veterinary use. Must be 18+ to purchase.
           </p>
         </div>
       </section>
-    </>
+    </main>
   );
 }
