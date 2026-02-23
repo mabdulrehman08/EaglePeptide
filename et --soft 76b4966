@@ -1,0 +1,14 @@
+[33m4e131fe[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m added mobile updates
+[33m97e0857[m added mobile updates
+[33m76b4966[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m feat: add dark mode
+[33m66bf73b[m fix:display products in grid
+[33me04b5cd[m removing sessions
+[33m56930bb[m finalising stuff
+[33m4d79c9f[m fixed routing
+[33m6a00909[m fixed products
+[33m112e88c[m Add/update .gitignore to ignore sensitive/temp files
+[33me9c3501[m force redeploy
+[33mb10eb8e[m deploy
+[33md4e2c18[m deploying
+[33m00d78ed[m .env
+[33mae22b45[m Initial commit - Eagle Peptide full project setup (React + pages, components, assets, server)
