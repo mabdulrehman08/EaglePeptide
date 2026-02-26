@@ -16,7 +16,7 @@ export default function Footer() {
   return (
     <footer className="bg-blue-900 mt-24">
       <div className="max-w-7xl mx-auto px-6 py-10 text-sm text-white">
-        <div className="flex flex-col md:flex-row justify-between gap-10">
+        <div className="flex flex-col md:flex-row justify-between gap-8 md:gap-10">
 
           {/* Brand */}
           <div>
@@ -47,8 +47,8 @@ export default function Footer() {
             <p className="text-blue-200">215-397-5020</p>
           </div>
 
-          {/* Contact Form */}
-          <div className="w-full md:w-80">
+          {/* Contact Form (desktop/tablet) */}
+          <div className="hidden sm:block w-full md:w-80">
             <p className="font-semibold text-white mb-3">Send Us a Message</p>
             {sent ? (
               <div className="bg-green-600 rounded-lg px-4 py-3 text-white text-sm">
@@ -91,8 +91,18 @@ export default function Footer() {
           </div>
         </div>
 
+        {/* Mobile contact CTA */}
+        <div className="sm:hidden mt-4">
+          <a
+            href="mailto:muhammadabdulrehman513@gmail.com"
+            className="block w-full text-center py-3 bg-red-600 hover:bg-red-700 text-white rounded-md font-semibold transition"
+          >
+            Contact Us by Email
+          </a>
+        </div>
+
         {/* Warning banner */}
-        <div className="mt-8 bg-red-600 rounded-lg px-4 py-3 text-white text-xs">
+        <div className="mt-6 sm:mt-8 bg-red-600 rounded-lg px-4 py-3 text-white text-xs sm:text-sm">
           <p>
             ⚠️ <strong>Research Use Only:</strong> Products sold on this website
             are intended strictly for laboratory research purposes. Not for
@@ -101,9 +111,9 @@ export default function Footer() {
         </div>
 
         {/* Bottom bar */}
-        <div className="mt-6 border-t border-blue-700 pt-6 flex flex-col md:flex-row justify-between items-center gap-2 text-xs text-blue-300">
+        <div className="mt-6 border-t border-blue-700 pt-6 flex flex-col md:flex-row justify-between items-center gap-3 text-xs text-blue-300">
           <p>© {new Date().getFullYear()} EaglePeptide. All rights reserved.</p>
-          <div className="flex gap-4">
+          <div className="flex flex-wrap justify-center gap-3 sm:gap-4">
             <span className="hover:text-white cursor-pointer transition">Privacy Policy</span>
             <span className="hover:text-white cursor-pointer transition">Terms & Conditions</span>
             <span className="hover:text-white cursor-pointer transition">Shipping & Returns</span>
