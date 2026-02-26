@@ -9,6 +9,17 @@ dotenv.config();
 const app = express();
 app.use(cors());
 
+const PORT = process.env.PORT || 4242;
+const CLIENT_URL = process.env.CLIENT_URL || "http://localhost:5173";
+
+if (!process.env.STRIPE_SECRET_KEY) {
+  throw new Error("Missing STRIPE_SECRET_KEY. Add your Stripe test key in .env.");
+}
+
+if (!process.env.STRIPE_WEBHOOK_SECRET) {
+  throw new Error("Missing STRIPE_WEBHOOK_SECRET. Add your Stripe webhook secret in .env.");
+}
+
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 const supabase = createClient(
@@ -115,8 +126,8 @@ app.post("/create-checkout-session", async (req, res) => {
       metadata: {
         userId,
       },
-      success_url: "http://localhost:5173/success",
-      cancel_url: "http://localhost:5173/cart",
+      success_url: `${CLIENT_URL}/success`,
+      cancel_url: `${CLIENT_URL}/cart`,
     });
 
     res.json({ url: session.url });
@@ -126,4 +137,4 @@ app.post("/create-checkout-session", async (req, res) => {
   }
 });
 
-app.listen(4242, () => console.log("✅ Stripe server running on port 4242"));
+app.listen(PORT, () => console.log(`✅ Stripe server running on port ${PORT}`));

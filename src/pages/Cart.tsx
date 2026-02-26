@@ -11,6 +11,7 @@ type CartItem = {
 };
 
 export default function Cart() {
+  const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:4242";
   const [items, setItems] = useState<CartItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [checkoutLoading, setCheckoutLoading] = useState(false);
@@ -65,19 +66,16 @@ export default function Cart() {
         return;
       }
 
-      const response = await fetch(
-        "http://localhost:4242/create-checkout-session",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            items,
-            userId: user.id, // ✅ Added userId
-          }),
-        }
-      );
+      const response = await fetch(`${apiUrl}/create-checkout-session`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          items,
+          userId: user.id,
+        }),
+      });
 
       const data = await response.json();
 
