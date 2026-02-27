@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { supabase } from "../lib/supabase";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function Signup() {
   const [firstName, setFirstName] = useState("");
@@ -9,11 +9,14 @@ export default function Signup() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
+    setSuccess(null);
 
     const { error } = await supabase.auth.signUp({
       email,
@@ -27,8 +30,12 @@ export default function Signup() {
       },
     });
 
-    if (error) setError(error.message);
-    else alert("Account created! You can now log in.");
+    if (error) {
+      setError(error.message);
+    } else {
+      setSuccess("Account created. Please check your email to confirm, then log in.");
+      setTimeout(() => navigate("/login?signup=success"), 1200);
+    }
 
     setLoading(false);
   };
@@ -108,6 +115,7 @@ export default function Signup() {
           />
 
           {error && <p className="text-red-600 text-sm">{error}</p>}
+          {success && <p className="text-green-700 text-sm">{success}</p>}
 
           <button
             type="submit"
