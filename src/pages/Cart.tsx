@@ -11,6 +11,7 @@ type CartItem = {
 };
 
 export default function Cart() {
+  const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:4242";
   const [items, setItems] = useState<CartItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [checkoutLoading, setCheckoutLoading] = useState(false);
@@ -65,19 +66,16 @@ export default function Cart() {
         return;
       }
 
-      const response = await fetch(
-        "http://localhost:4242/create-checkout-session",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            items,
-            userId: user.id, // ✅ Added userId
-          }),
-        }
-      );
+      const response = await fetch(`${apiUrl}/create-checkout-session`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          items,
+          userId: user.id,
+        }),
+      });
 
       const data = await response.json();
 
@@ -106,9 +104,9 @@ export default function Cart() {
   );
 
   return (
-    <section className="py-28 bg-gradient-to-b from-blue-50 to-white min-h-screen">
-      <div className="max-w-4xl mx-auto px-6">
-        <h1 className="text-3xl font-bold mb-10 text-gray-900">
+    <section className="py-16 sm:py-24 bg-gradient-to-b from-blue-50 to-white min-h-screen">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6">
+        <h1 className="text-2xl sm:text-3xl font-bold mb-6 sm:mb-10 text-gray-900">
           Your Cart
         </h1>
 
@@ -125,58 +123,65 @@ export default function Cart() {
               {items.map((item) => (
                 <div
                   key={item.id}
-                  className="flex justify-between items-center p-6"
+                  className="p-4 sm:p-6"
                 >
-                  <div>
-                    <p className="font-semibold text-gray-900">
-                      {item.products.name}
-                    </p>
+                  <div className="flex flex-col gap-4 sm:gap-0 sm:flex-row sm:items-center sm:justify-between">
+                    <div>
+                      <div className="flex items-start justify-between gap-4 sm:block">
+                        <p className="font-semibold text-gray-900 text-sm sm:text-base">
+                          {item.products.name}
+                        </p>
+                        <p className="font-semibold text-gray-900 sm:hidden">
+                          ${(item.products.price * item.quantity).toFixed(2)}
+                        </p>
+                      </div>
 
-                    <div className="flex items-center gap-3 mt-3">
+                      <div className="flex items-center gap-3 mt-3">
+                        <button
+                          onClick={() =>
+                            updateQuantity(item.id, item.quantity - 1)
+                          }
+                          className="px-3 py-1 bg-blue-100 text-blue-700 rounded hover:bg-blue-200 transition"
+                        >
+                          −
+                        </button>
+
+                        <span className="font-medium text-gray-900 min-w-6 text-center">
+                          {item.quantity}
+                        </span>
+
+                        <button
+                          onClick={() =>
+                            updateQuantity(item.id, item.quantity + 1)
+                          }
+                          className="px-3 py-1 bg-blue-100 text-blue-700 rounded hover:bg-blue-200 transition"
+                        >
+                          +
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className="text-left sm:text-right">
+                      <p className="hidden sm:block font-semibold text-gray-900">
+                        $
+                        {(item.products.price * item.quantity).toFixed(2)}
+                      </p>
+
                       <button
-                        onClick={() =>
-                          updateQuantity(item.id, item.quantity - 1)
-                        }
-                        className="px-3 py-1 bg-blue-100 text-blue-700 rounded hover:bg-blue-200 transition"
+                        onClick={() => removeItem(item.id)}
+                        className="text-sm text-red-600 hover:text-red-700 mt-2 transition"
                       >
-                        −
-                      </button>
-
-                      <span className="font-medium text-gray-900">
-                        {item.quantity}
-                      </span>
-
-                      <button
-                        onClick={() =>
-                          updateQuantity(item.id, item.quantity + 1)
-                        }
-                        className="px-3 py-1 bg-blue-100 text-blue-700 rounded hover:bg-blue-200 transition"
-                      >
-                        +
+                        Remove
                       </button>
                     </div>
-                  </div>
-
-                  <div className="text-right">
-                    <p className="font-semibold text-gray-900">
-                      $
-                      {(item.products.price * item.quantity).toFixed(2)}
-                    </p>
-
-                    <button
-                      onClick={() => removeItem(item.id)}
-                      className="text-sm text-red-600 hover:text-red-700 mt-2 transition"
-                    >
-                      Remove
-                    </button>
                   </div>
                 </div>
               ))}
             </div>
 
             {/* TOTAL + CHECKOUT */}
-            <div className="mt-10 bg-white rounded-2xl shadow-sm p-6">
-              <div className="flex justify-between text-lg font-semibold text-gray-900">
+            <div className="mt-6 sm:mt-10 bg-white rounded-2xl shadow-sm p-5 sm:p-6">
+              <div className="flex justify-between text-base sm:text-lg font-semibold text-gray-900">
                 <span>Total</span>
                 <span>${total.toFixed(2)}</span>
               </div>
