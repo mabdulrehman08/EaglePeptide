@@ -20,9 +20,9 @@ export default function ProductCard({
   return (
     <Link
       to={`/products/${slug}`}
-      className="min-w-[240px] bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-2xl p-5 hover:shadow-xl transition block flex-shrink-0"
+      className="w-full max-w-sm bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-2xl p-4 sm:p-5 hover:shadow-xl transition block"
     >
-      <div className="h-48 bg-pink-50 dark:bg-gray-700 rounded-xl mb-4 overflow-hidden flex items-center justify-center">
+      <div className="h-44 sm:h-48 bg-pink-50 dark:bg-gray-700 rounded-xl mb-4 overflow-hidden flex items-center justify-center">
         <img
           src={image}
           alt={name}

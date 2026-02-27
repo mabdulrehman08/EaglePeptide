@@ -102,19 +102,19 @@ export default function ProductDetail() {
   }
 
   return (
-    <section className="py-28 bg-gradient-to-b from-blue-50 to-white">
-      <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+    <section className="py-16 sm:py-24 bg-gradient-to-b from-blue-50 to-white">
+      <div className="max-w-7xl mx-auto px-5 sm:px-6 grid grid-cols-1 md:grid-cols-2 gap-8 sm:gap-12 md:gap-16 items-center">
 
         <div className="flex justify-center">
           <img
             src={imageMap[product.slug] ?? retatrutide}
             alt={product.name}
-            className="h-96 object-contain drop-shadow-xl"
+            className="h-64 sm:h-80 md:h-96 object-contain drop-shadow-xl"
           />
         </div>
 
         <div>
-          <h1 className="text-4xl font-bold text-gray-900">
+          <h1 className="text-3xl sm:text-4xl font-bold text-gray-900">
             {product.name}
           </h1>
 
@@ -122,19 +122,19 @@ export default function ProductDetail() {
             {product.dosage} • {product.vials} vials
           </p>
 
-          <p className="mt-8 text-gray-600 leading-relaxed">
+          <p className="mt-6 sm:mt-8 text-gray-600 leading-relaxed text-sm sm:text-base">
             {product.description}
           </p>
 
-          <div className="mt-10">
-            <p className="text-3xl font-bold text-gray-900">
+          <div className="mt-8 sm:mt-10">
+            <p className="text-2xl sm:text-3xl font-bold text-gray-900">
               ${product.price}
             </p>
 
             <button
               onClick={handleAddToCart}
               disabled={adding}
-              className="mt-6 px-8 py-3 bg-blue-600 text-white rounded-md font-medium hover:bg-blue-700 transition disabled:opacity-50"
+              className="mt-5 sm:mt-6 w-full sm:w-auto px-6 sm:px-8 py-3 bg-blue-600 text-white rounded-md font-medium hover:bg-blue-700 transition disabled:opacity-50"
             >
               {adding ? "Adding..." : "Add to Cart"}
             </button>

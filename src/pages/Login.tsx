@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { supabase } from "../lib/supabase";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, useSearchParams } from "react-router-dom";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -8,6 +8,8 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const signupSuccess = searchParams.get("signup") === "success";
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -40,6 +42,12 @@ export default function Login() {
             Sign up
           </Link>
         </p>
+
+        {signupSuccess && (
+          <div className="mb-5 bg-green-50 text-green-700 border border-green-200 rounded-md px-4 py-3 text-sm">
+            Account created successfully. You can now log in.
+          </div>
+        )}
 
         {/* Google Button */}
         <button
@@ -86,6 +94,12 @@ export default function Login() {
           >
             {loading ? "Logging in..." : "Log In"}
           </button>
+
+          <div className="text-right">
+            <Link to="/forgot-password" className="text-sm text-blue-600 hover:underline">
+              Forgot password?
+            </Link>
+          </div>
         </form>
       </div>
     </div>

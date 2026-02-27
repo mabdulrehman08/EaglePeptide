@@ -5,6 +5,8 @@ import ProductDetail from "./pages/ProductDetail";
 import Footer from "./components/Footer";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
+import ForgotPassword from "./pages/ForgotPassword";
+import AuthCallback from "./pages/AuthCallback";
 import Account from "./pages/Account";
 import Cart from "./pages/Cart";
 import Success from "./pages/Success";
@@ -23,6 +25,8 @@ function App() {
           <Route path="/products/:slug" element={<ProductDetail />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/auth/callback" element={<AuthCallback />} />
           <Route path="/account" element={<Account />} />
           <Route path="/success" element={<Success />} />
           <Route path="/about" element={<About />} />
