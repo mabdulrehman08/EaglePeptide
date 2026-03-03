@@ -58,10 +58,9 @@ export default function Cart() {
     try {
       setCheckoutLoading(true);
 
-      // ✅ Get the logged in user
-      const { data: { user } } = await supabase.auth.getUser();
+      const { data: { session } } = await supabase.auth.getSession();
 
-      if (!user) {
+      if (!session?.access_token) {
         alert("Please log in to checkout.");
         return;
       }
@@ -70,14 +69,18 @@ export default function Cart() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": `Bearer ${session.access_token}`,
         },
-        body: JSON.stringify({
-          items,
-          userId: user.id,
-        }),
+        // Server validates user from token and cart from DB.
+        body: JSON.stringify({ items: [] }),
       });
 
       const data = await response.json();
+
+      if (!response.ok) {
+        alert(data.error || "Checkout failed.");
+        return;
+      }
 
       if (data.url) {
         window.location.href = data.url;
