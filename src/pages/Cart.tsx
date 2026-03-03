@@ -141,7 +141,7 @@ export default function Cart() {
                           onClick={() =>
                             updateQuantity(item.id, item.quantity - 1)
                           }
-                          className="px-3 py-1 bg-blue-100 text-blue-700 rounded hover:bg-blue-200 transition"
+                          className="min-h-[40px] min-w-[40px] px-3 py-1 bg-blue-100 text-blue-700 rounded hover:bg-blue-200 transition touch-manipulation"
                         >
                           −
                         </button>
@@ -154,7 +154,7 @@ export default function Cart() {
                           onClick={() =>
                             updateQuantity(item.id, item.quantity + 1)
                           }
-                          className="px-3 py-1 bg-blue-100 text-blue-700 rounded hover:bg-blue-200 transition"
+                          className="min-h-[40px] min-w-[40px] px-3 py-1 bg-blue-100 text-blue-700 rounded hover:bg-blue-200 transition touch-manipulation"
                         >
                           +
                         </button>
@@ -169,7 +169,7 @@ export default function Cart() {
 
                       <button
                         onClick={() => removeItem(item.id)}
-                        className="text-sm text-red-600 hover:text-red-700 mt-2 transition"
+                        className="text-sm text-red-600 hover:text-red-700 mt-2 transition min-h-[40px] px-2 touch-manipulation"
                       >
                         Remove
                       </button>

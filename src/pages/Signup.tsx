@@ -49,7 +49,7 @@ export default function Signup() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white flex items-center justify-center px-4">
-      <div className="bg-white rounded-2xl shadow-sm p-10 w-full max-w-md">
+      <div className="bg-white rounded-2xl shadow-sm p-6 sm:p-10 w-full max-w-md">
 
         <h1 className="text-2xl font-bold text-gray-900 mb-1">Create Account</h1>
         <p className="text-sm text-gray-500 mb-8">
@@ -77,7 +77,7 @@ export default function Signup() {
 
         {/* Form */}
         <form onSubmit={handleSignup} className="space-y-4">
-          <div className="flex gap-3">
+          <div className="flex flex-col sm:flex-row gap-3">
             <input
               type="text"
               placeholder="First Name"
