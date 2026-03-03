@@ -114,9 +114,9 @@ export default function Footer() {
         <div className="mt-6 border-t border-blue-700 pt-6 flex flex-col md:flex-row justify-between items-center gap-3 text-xs text-blue-300">
           <p>© {new Date().getFullYear()} EaglePeptide. All rights reserved.</p>
           <div className="flex flex-wrap justify-center gap-3 sm:gap-4">
-            <span className="hover:text-white cursor-pointer transition">Privacy Policy</span>
-            <span className="hover:text-white cursor-pointer transition">Terms & Conditions</span>
-            <span className="hover:text-white cursor-pointer transition">Shipping & Returns</span>
+            <a href="#" className="hover:text-white transition">Privacy Policy</a>
+            <a href="#" className="hover:text-white transition">Terms & Conditions</a>
+            <a href="#" className="hover:text-white transition">Shipping & Returns</a>
           </div>
         </div>
       </div>
