@@ -11,6 +11,7 @@ This checklist is the fastest path to put ordering live safely today.
 - Confirm backend env values:
   - `SUPABASE_URL`
   - `SUPABASE_SERVICE_ROLE_KEY`
+  - `SUPABASE_ANON_KEY` (server-side token verification for checkout auth)
   - `STRIPE_SECRET_KEY` (live key for production)
   - `STRIPE_WEBHOOK_SECRET` (from production webhook endpoint)
   - `CLIENT_URL` (your real website URL)
@@ -76,3 +77,21 @@ Ensure the following tables/columns exist and match backend expectations:
 - Add admin orders page (internal view for all orders).
 - Add order confirmation email.
 - Add analytics for checkout funnel (product click -> add to cart -> checkout started -> paid).
+
+
+## 8) Supabase changes required for secure checkout (do this now)
+
+1. Add a unique constraint on Stripe session id to enforce webhook idempotency:
+   - `orders.stripe_session_id` must be `UNIQUE`.
+
+2. Confirm RLS policies for user data tables:
+   - `cart_items`: users can only `select/insert/update/delete` rows where `user_id = auth.uid()`.
+   - `orders`: users can only `select` rows where `user_id = auth.uid()`.
+   - `order_items`: users can only `select` rows joined through their own orders.
+
+3. Ensure product pricing is immutable to clients:
+   - Keep `products.price` write access restricted to admin/service role only.
+
+4. Keep service-role usage backend-only:
+   - `SUPABASE_SERVICE_ROLE_KEY` must never be exposed to the frontend.
+

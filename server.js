@@ -7,37 +7,122 @@ import { createClient } from "@supabase/supabase-js";
 dotenv.config();
 
 const app = express();
-app.use(cors());
 
 const PORT = process.env.PORT || 4242;
 const CLIENT_URL = process.env.CLIENT_URL || "http://localhost:5173";
+const CORS_ORIGINS = (process.env.CORS_ORIGINS || CLIENT_URL)
+  .split(",")
+  .map((s) => s.trim())
+  .filter(Boolean);
 
-if (!process.env.STRIPE_SECRET_KEY) {
-  throw new Error("Missing STRIPE_SECRET_KEY. Add your Stripe test key in .env.");
-}
+const REQUIRED_ENV = [
+  "STRIPE_SECRET_KEY",
+  "STRIPE_WEBHOOK_SECRET",
+  "SUPABASE_URL",
+  "SUPABASE_SERVICE_ROLE_KEY",
+  "SUPABASE_ANON_KEY",
+];
 
-if (!process.env.STRIPE_WEBHOOK_SECRET) {
-  throw new Error("Missing STRIPE_WEBHOOK_SECRET. Add your Stripe webhook secret in .env.");
+for (const key of REQUIRED_ENV) {
+  if (!process.env[key]) {
+    throw new Error(`Missing ${key}. Add it to your environment variables.`);
+  }
 }
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
-const supabase = createClient(
+const supabaseAdmin = createClient(
   process.env.SUPABASE_URL,
   process.env.SUPABASE_SERVICE_ROLE_KEY
 );
 
-// ✅ Webhook BEFORE express.json()
+const supabaseAuth = createClient(
+  process.env.SUPABASE_URL,
+  process.env.SUPABASE_ANON_KEY
+);
+
+app.use(
+  cors({
+    origin(origin, callback) {
+      if (!origin) return callback(null, true);
+      if (CORS_ORIGINS.includes(origin)) return callback(null, true);
+      return callback(new Error("CORS origin not allowed"));
+    },
+    methods: ["GET", "POST", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
+);
+
+const rateLimitStore = new Map();
+
+function applyRateLimit({ key, limit, windowMs }) {
+  const now = Date.now();
+  const existing = rateLimitStore.get(key);
+
+  if (!existing || existing.expiresAt <= now) {
+    rateLimitStore.set(key, { count: 1, expiresAt: now + windowMs });
+    return { ok: true };
+  }
+
+  existing.count += 1;
+  if (existing.count > limit) {
+    return { ok: false, retryAfterSec: Math.ceil((existing.expiresAt - now) / 1000) };
+  }
+
+  return { ok: true };
+}
+
+function getBearerToken(req) {
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith("Bearer ")) return null;
+  return authHeader.slice(7).trim();
+}
+
+async function requireAuthenticatedUser(req, res) {
+  const token = getBearerToken(req);
+  if (!token) {
+    res.status(401).json({ error: "Missing bearer token" });
+    return null;
+  }
+
+  const { data, error } = await supabaseAuth.auth.getUser(token);
+  if (error || !data.user) {
+    res.status(401).json({ error: "Invalid authentication token" });
+    return null;
+  }
+
+  return data.user;
+}
+
+function parseCheckoutRequestBody(body) {
+  if (!body || typeof body !== "object" || Array.isArray(body)) {
+    return { valid: false, error: "Invalid request body" };
+  }
+
+  if (body.items !== undefined && !Array.isArray(body.items)) {
+    return { valid: false, error: "items must be an array when provided" };
+  }
+
+  return { valid: true };
+}
+
+// Webhook BEFORE express.json()
 app.post("/webhook", express.raw({ type: "application/json" }), async (req, res) => {
+  const ip = req.ip || req.socket.remoteAddress || "unknown";
+  const throttle = applyRateLimit({ key: `webhook:${ip}`, limit: 120, windowMs: 60_000 });
+  if (!throttle.ok) {
+    return res.status(429).json({ error: "Too many webhook requests" });
+  }
+
   const sig = req.headers["stripe-signature"];
+  if (!sig) {
+    return res.status(400).send("Missing Stripe signature");
+  }
+
   let event;
 
   try {
-    event = stripe.webhooks.constructEvent(
-      req.body,
-      sig,
-      process.env.STRIPE_WEBHOOK_SECRET
-    );
+    event = stripe.webhooks.constructEvent(req.body, sig, process.env.STRIPE_WEBHOOK_SECRET);
   } catch (err) {
     console.error("Webhook signature failed:", err.message);
     return res.status(400).send(`Webhook Error: ${err.message}`);
@@ -45,12 +130,27 @@ app.post("/webhook", express.raw({ type: "application/json" }), async (req, res)
 
   if (event.type === "checkout.session.completed") {
     const session = event.data.object;
-    const userId = session.metadata.userId;
-    const total = session.amount_total / 100;
+    const userId = session.metadata?.userId;
+    const total = (session.amount_total || 0) / 100;
+
+    if (!userId || !session.id) {
+      return res.status(400).send("Missing required session metadata");
+    }
 
     try {
-      // Save order
-      const { data: order, error: orderError } = await supabase
+      // Idempotency guard: if order for this Stripe session exists, acknowledge and exit.
+      const { data: existingOrder, error: existingOrderError } = await supabaseAdmin
+        .from("orders")
+        .select("id")
+        .eq("stripe_session_id", session.id)
+        .maybeSingle();
+
+      if (existingOrderError) throw existingOrderError;
+      if (existingOrder) {
+        return res.json({ received: true, idempotent: true });
+      }
+
+      const { data: order, error: orderError } = await supabaseAdmin
         .from("orders")
         .insert({
           user_id: userId,
@@ -63,77 +163,106 @@ app.post("/webhook", express.raw({ type: "application/json" }), async (req, res)
 
       if (orderError) throw orderError;
 
-      // Fetch line items from Stripe
       const lineItems = await stripe.checkout.sessions.listLineItems(session.id);
 
-      // Save order items
-      const { error: itemsError } = await supabase.from("order_items").insert(
-        lineItems.data.map((item) => ({
+      const safeItems = lineItems.data
+        .filter((item) => typeof item.description === "string" && Number.isInteger(item.quantity || 0))
+        .map((item) => ({
           order_id: order.id,
           product_name: item.description,
           quantity: item.quantity,
-          price: item.amount_total / 100,
-        }))
-      );
+          price: (item.amount_total || 0) / 100,
+        }));
 
-      if (itemsError) throw itemsError;
+      if (safeItems.length > 0) {
+        const { error: itemsError } = await supabaseAdmin.from("order_items").insert(safeItems);
+        if (itemsError) throw itemsError;
+      }
 
-      // Clear cart
-      const { error: cartError } = await supabase
+      const { error: cartError } = await supabaseAdmin
         .from("cart_items")
         .delete()
         .eq("user_id", userId);
 
       if (cartError) throw cartError;
-
     } catch (err) {
       console.error("Webhook handler failed:", err);
       return res.status(500).send("Webhook handler error");
     }
   }
 
-  res.json({ received: true });
+  return res.json({ received: true });
 });
 
-// ✅ express.json() AFTER webhook
-app.use(express.json());
+// express.json AFTER webhook
+app.use(express.json({ limit: "100kb" }));
 
 app.post("/create-checkout-session", async (req, res) => {
-  try {
-    const { items, userId } = req.body;
+  const ip = req.ip || req.socket.remoteAddress || "unknown";
+  const throttle = applyRateLimit({ key: `checkout:${ip}`, limit: 25, windowMs: 60_000 });
+  if (!throttle.ok) {
+    res.setHeader("Retry-After", String(throttle.retryAfterSec));
+    return res.status(429).json({ error: "Too many checkout attempts" });
+  }
 
-    if (!items || items.length === 0) {
+  const bodyValidation = parseCheckoutRequestBody(req.body);
+  if (!bodyValidation.valid) {
+    return res.status(400).json({ error: bodyValidation.error });
+  }
+
+  try {
+    const user = await requireAuthenticatedUser(req, res);
+    if (!user) return;
+
+    // Authoritative pricing and quantity pulled server-side from DB (never trust client body prices/userId).
+    const { data: cartRows, error: cartError } = await supabaseAdmin
+      .from("cart_items")
+      .select("quantity, products(name, price)")
+      .eq("user_id", user.id);
+
+    if (cartError) {
+      console.error("Cart lookup failed:", cartError);
+      return res.status(500).json({ error: "Failed to load cart" });
+    }
+
+    if (!cartRows || cartRows.length === 0) {
       return res.status(400).json({ error: "No items in cart" });
     }
 
-    if (!userId) {
-      return res.status(400).json({ error: "User not logged in" });
-    }
+    const lineItems = cartRows.map((item) => {
+      const name = item.products?.name;
+      const price = item.products?.price;
+      const quantity = item.quantity;
+
+      if (!name || typeof price !== "number" || !Number.isFinite(price) || !Number.isInteger(quantity) || quantity < 1) {
+        throw new Error("Invalid cart data");
+      }
+
+      return {
+        price_data: {
+          currency: "usd",
+          product_data: { name },
+          unit_amount: Math.round(price * 100),
+        },
+        quantity,
+      };
+    });
 
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
-      line_items: items.map((item) => ({
-        price_data: {
-          currency: "usd",
-          product_data: {
-            name: item.products.name,
-          },
-          unit_amount: Math.round(item.products.price * 100),
-        },
-        quantity: item.quantity,
-      })),
+      line_items: lineItems,
       mode: "payment",
       metadata: {
-        userId,
+        userId: user.id,
       },
       success_url: `${CLIENT_URL}/success`,
       cancel_url: `${CLIENT_URL}/cart`,
     });
 
-    res.json({ url: session.url });
+    return res.json({ url: session.url });
   } catch (error) {
     console.error("Stripe session error:", error);
-    res.status(500).json({ error: "Failed to create checkout session" });
+    return res.status(500).json({ error: "Failed to create checkout session" });
   }
 });
 
