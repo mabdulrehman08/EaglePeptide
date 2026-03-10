@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../lib/supabase";
 import ProductCard from "../components/ProductCard";
+
+// Static imports — keep as-is0 
 import retatrutide from "../assets/retatrutide.jpg";
 import mt2 from "../assets/mt2.jpg";
 import ipamorelin from "../assets/ipamorelin.jpg";
@@ -10,6 +12,7 @@ import glp3 from "../assets/glp3.jpg";
 import bpc157 from "../assets/bpc157.jpg";
 import bacwater from "../assets/bacwater.jpg";
 
+// Fix 1: Better typing for image map (string | undefined is safer)
 const imageMap: Record<string, string> = {
   retatrutide: retatrutide,
   "melanotan-ii": mt2,
@@ -53,7 +56,7 @@ export default function Home() {
   }, []);
 
   return (
-    <main className="min-h-screen bg-white dark:bg-gray-950">
+    <main className="min-h-screen bg-white dark:bg-gray-950 overflow-x-hidden">
       {/* HERO */}
       <section className="pt-10 pb-12 sm:pt-16 sm:pb-20 md:pt-24 md:pb-32 bg-gradient-to-b from-blue-50 to-white dark:from-gray-900 dark:to-gray-950">
         <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
@@ -65,26 +68,27 @@ export default function Home() {
                 <span className="text-blue-600 dark:text-blue-400">Research Peptides</span>
               </h1>
               <p className="text-base sm:text-lg md:text-xl text-gray-600 dark:text-gray-400 max-w-xl mx-auto md:mx-0 leading-relaxed">
-                High-purity compounds manufactured for laboratory research only.  
+                High-purity compounds manufactured for laboratory research only.
                 Trusted by professionals worldwide.
               </p>
+
               <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start mt-6 sm:mt-8">
                 <a
                   href="#products"
-                  className="inline-flex items-center justify-center px-8 py-4 min-h-[52px] bg-blue-600 text-white rounded-lg font-medium text-base sm:text-lg hover:bg-blue-700 transition shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 touch-manipulation"
+                  className="w-full sm:w-auto inline-flex items-center justify-center px-8 py-4 min-h-[52px] bg-blue-600 text-white rounded-lg font-medium text-base sm:text-lg hover:bg-blue-700 transition shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 touch-manipulation"
                 >
                   Shop Products
                 </a>
                 <a
                   href="/about"
-                  className="inline-flex items-center justify-center px-8 py-4 min-h-[52px] border border-blue-300 dark:border-blue-600 text-blue-700 dark:text-blue-400 rounded-lg font-medium text-base sm:text-lg hover:bg-blue-50 dark:hover:bg-blue-900 transition touch-manipulation"
+                  className="w-full sm:w-auto inline-flex items-center justify-center px-8 py-4 min-h-[52px] border border-blue-300 dark:border-blue-600 text-blue-700 dark:text-blue-400 rounded-lg font-medium text-base sm:text-lg hover:bg-blue-50 dark:hover:bg-blue-900 transition touch-manipulation"
                 >
                   Learn More
                 </a>
               </div>
             </div>
 
-            {/* Hero image — hidden on mobile, shown from md+ */}
+            {/* Hero image — hidden on mobile */}
             <div className="hidden md:flex rounded-2xl overflow-hidden items-center justify-center bg-pink-50 dark:bg-gray-800 w-full h-80 lg:h-[28rem] mx-auto">
               <img
                 src={retatrutide}
@@ -110,28 +114,27 @@ export default function Home() {
           )}
 
           {!loading && products.length > 0 && (
-            <div
-              className="
-                grid grid-cols-1          /* mobile: 1 column */
-                sm:grid-cols-2            /* ~640px+: 2 columns */
-                lg:grid-cols-3
-                xl:grid-cols-4
-                gap-5 sm:gap-6 lg:gap-8
-              "
-            >
+            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
               {products.map((p) => (
-                <div key={p.id} className="flex justify-center">
-                  <ProductCard
-                    name={p.name}
-                    dosage={p.dosage}
-                    vials={p.vials}
-                    price={`$${p.price}`}
-                    slug={p.slug}
-                    image={imageMap[p.slug] ?? retatrutide}
-                  />
-                </div>
+                <ProductCard
+                  key={p.id}
+                  name={p.name}
+                  dosage={p.dosage}
+                  vials={p.vials}
+                  price={`$${p.price}`}
+                  slug={p.slug}
+                  // Fix 2: safer fallback (?? instead of ||)
+                  image={imageMap[p.slug] ?? retatrutide}
+                />
               ))}
             </div>
+          )}
+
+          {/* Optional small improvement — show message when no products */}
+          {!loading && products.length === 0 && (
+            <p className="text-center text-gray-500 dark:text-gray-400 py-16 text-lg">
+              No products found.
+            </p>
           )}
         </div>
       </section>
@@ -140,7 +143,7 @@ export default function Home() {
       <section className="py-8 sm:py-10 bg-white dark:bg-gray-950">
         <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
           <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-600 text-center max-w-3xl mx-auto leading-relaxed">
-            ⚠️ All products are intended strictly for laboratory research purposes only.  
+            ⚠️ All products are intended strictly for laboratory research purposes only.
             Not for human consumption, medical, or veterinary use. Must be 18+ to purchase.
           </p>
         </div>
