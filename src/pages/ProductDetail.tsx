@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { supabase } from "../lib/supabase";
+import { getProductDescription } from "../lib/productDescriptions";
 
 import retatrutide from "../assets/retatrutide.jpg";
 import mt2 from "../assets/mt2.jpg";
@@ -123,8 +124,14 @@ export default function ProductDetail() {
           </p>
 
           <p className="mt-6 sm:mt-8 text-gray-600 leading-relaxed text-sm sm:text-base">
-            {product.description}
+            {getProductDescription(product.slug, product.description)}
           </p>
+
+          <ul className="mt-5 space-y-2 text-sm text-gray-600">
+            <li>• Laboratory quality controlled packaging</li>
+            <li>• Secure checkout with order history tracking</li>
+            <li>• Clearly labeled dosage and vial count</li>
+          </ul>
 
           <div className="mt-8 sm:mt-10">
             <p className="text-2xl sm:text-3xl font-bold text-gray-900">
