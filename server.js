@@ -94,6 +94,27 @@ async function requireAuthenticatedUser(req, res) {
   return data.user;
 }
 
+
+async function resolveUserIdFromSession(session) {
+  const directUserId = session.metadata?.userId || session.client_reference_id;
+  if (directUserId) return directUserId;
+
+  if (!session.id) return null;
+
+  const { data, error } = await supabaseAdmin
+    .from("checkout_session_links")
+    .select("user_id")
+    .eq("stripe_session_id", session.id)
+    .maybeSingle();
+
+  if (error) {
+    console.error("Checkout session link lookup failed:", error);
+    return null;
+  }
+
+  return data?.user_id || null;
+}
+
 function parseCheckoutRequestBody(body) {
   if (!body || typeof body !== "object" || Array.isArray(body)) {
     return { valid: false, error: "Invalid request body" };
@@ -130,11 +151,12 @@ app.post("/webhook", express.raw({ type: "application/json" }), async (req, res)
 
   if (event.type === "checkout.session.completed") {
     const session = event.data.object;
-    const userId = session.metadata?.userId || session.client_reference_id;
+    const userId = await resolveUserIdFromSession(session);
     const total = (session.amount_total || 0) / 100;
 
     if (!userId || !session.id) {
-      return res.status(400).send("Missing required session metadata");
+      console.error("Missing user linkage for checkout session:", session.id);
+      return res.status(200).json({ received: true, skipped: "missing_user_linkage" });
     }
 
     try {
@@ -259,6 +281,15 @@ app.post("/create-checkout-session", async (req, res) => {
       success_url: `${CLIENT_URL}/success`,
       cancel_url: `${CLIENT_URL}/cart`,
     });
+
+    const { error: linkError } = await supabaseAdmin.from("checkout_session_links").upsert({
+      stripe_session_id: session.id,
+      user_id: user.id,
+    });
+
+    if (linkError) {
+      console.error("Failed to persist checkout session link:", linkError);
+    }
 
     return res.json({ url: session.url });
   } catch (error) {
