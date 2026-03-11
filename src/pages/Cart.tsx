@@ -1,13 +1,21 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../lib/supabase";
 
+type ProductRef = {
+  name: string;
+  price: number;
+};
+
+type CartItemRow = {
+  id: string;
+  quantity: number;
+  products: ProductRef | ProductRef[] | null;
+};
+
 type CartItem = {
   id: string;
   quantity: number;
-  products: {
-    name: string;
-    price: number;
-  };
+  products: ProductRef;
 };
 
 export default function Cart() {
@@ -24,7 +32,15 @@ export default function Cart() {
     if (error) {
       console.error(error);
     } else {
-      setItems(data as any);
+      const normalized: CartItem[] = ((data ?? []) as CartItemRow[])
+        .map((row) => ({
+          id: row.id,
+          quantity: row.quantity,
+          products: Array.isArray(row.products) ? row.products[0] : row.products,
+        }))
+        .filter((row): row is CartItem => Boolean(row.products));
+
+      setItems(normalized);
     }
 
     setLoading(false);
@@ -37,19 +53,13 @@ export default function Cart() {
   const updateQuantity = async (id: string, quantity: number) => {
     if (quantity < 1) return;
 
-    await supabase
-      .from("cart_items")
-      .update({ quantity })
-      .eq("id", id);
+    await supabase.from("cart_items").update({ quantity }).eq("id", id);
 
     loadCart();
   };
 
   const removeItem = async (id: string) => {
-    await supabase
-      .from("cart_items")
-      .delete()
-      .eq("id", id);
+    await supabase.from("cart_items").delete().eq("id", id);
 
     loadCart();
   };
@@ -58,7 +68,9 @@ export default function Cart() {
     try {
       setCheckoutLoading(true);
 
-      const { data: { session } } = await supabase.auth.getSession();
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
 
       if (!session?.access_token) {
         alert("Please log in to checkout.");
@@ -69,22 +81,47 @@ export default function Cart() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${session.access_token}`,
+          Authorization: `Bearer ${session.access_token}`,
         },
-        // Server validates user from token and cart from DB.
         body: JSON.stringify({ items: [] }),
       });
 
-      const data = await response.json();
+      const contentType = response.headers.get("content-type") || "";
+      let payload: { error?: string; url?: string; raw?: string } = {};
+
+      if (contentType.includes("application/json")) {
+        try {
+          payload = await response.json();
+        } catch {
+          payload = {};
+        }
+      } else {
+        const raw = await response.text();
+        payload = { raw };
+      }
 
       if (!response.ok) {
-        alert(data.error || "Checkout failed.");
+        const fallback = response.status === 404
+          ? "Checkout failed (404). API endpoint not found. Set VITE_API_URL to your backend URL (Railway), not your frontend domain."
+          : payload.raw
+          ? `Checkout failed (${response.status}). API returned non-JSON response. Check VITE_API_URL and CORS_ORIGINS.`
+          : `Checkout failed (${response.status}).`;
+        alert(payload.error || fallback);
+        console.error("Checkout API error", {
+          status: response.status,
+          apiUrl,
+          payload,
+        });
         return;
       }
 
-      if (data.url) {
-        window.location.href = data.url;
+      if (payload.url) {
+        window.location.href = payload.url;
+        return;
       }
+
+      alert("Checkout failed: missing redirect URL from API.");
+      console.error("Checkout response missing url", { apiUrl, payload });
     } catch (error) {
       console.error("Checkout error:", error);
       alert("Checkout failed.");
@@ -94,70 +131,53 @@ export default function Cart() {
   };
 
   if (loading) {
-    return (
-      <p className="py-24 text-center text-gray-500">
-        Loading cart…
-      </p>
-    );
+    return <p className="py-24 text-center text-gray-500">Loading cart…</p>;
   }
 
-  const total = items.reduce(
-    (sum, item) => sum + item.quantity * item.products.price,
-    0
-  );
+  const total = items.reduce((sum, item) => sum + item.quantity * item.products.price, 0);
+  const itemCount = items.reduce((sum, item) => sum + item.quantity, 0);
 
   return (
     <section className="py-16 sm:py-24 bg-gradient-to-b from-blue-50 to-white min-h-screen">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6">
-        <h1 className="text-2xl sm:text-3xl font-bold mb-6 sm:mb-10 text-gray-900">
-          Your Cart
-        </h1>
+      <div className="max-w-5xl mx-auto px-4 sm:px-6">
+        <div className="mb-6 sm:mb-10 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3">
+          <div>
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Your Cart</h1>
+            <p className="text-sm text-gray-500 mt-1">{itemCount} item{itemCount !== 1 ? "s" : ""} in your cart</p>
+          </div>
+        </div>
 
         {items.length === 0 && (
-          <div className="bg-white p-10 rounded-xl shadow-sm text-center text-gray-500">
+          <div className="bg-white p-10 rounded-2xl shadow-sm text-center text-gray-500">
             Your cart is empty.
           </div>
         )}
 
         {items.length > 0 && (
-          <>
-            {/* CART ITEMS */}
-            <div className="bg-white rounded-2xl shadow-sm divide-y">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8 items-start">
+            <div className="lg:col-span-2 bg-white rounded-2xl shadow-sm divide-y border border-blue-50">
               {items.map((item) => (
-                <div
-                  key={item.id}
-                  className="p-4 sm:p-6"
-                >
-                  <div className="flex flex-col gap-4 sm:gap-0 sm:flex-row sm:items-center sm:justify-between">
+                <div key={item.id} className="p-4 sm:p-6">
+                  <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                     <div>
-                      <div className="flex items-start justify-between gap-4 sm:block">
-                        <p className="font-semibold text-gray-900 text-sm sm:text-base">
-                          {item.products.name}
-                        </p>
-                        <p className="font-semibold text-gray-900 sm:hidden">
-                          ${(item.products.price * item.quantity).toFixed(2)}
-                        </p>
-                      </div>
+                      <p className="font-semibold text-gray-900 text-sm sm:text-base">{item.products.name}</p>
+                      <p className="text-xs text-gray-500 mt-1">${item.products.price.toFixed(2)} each</p>
 
-                      <div className="flex items-center gap-3 mt-3">
+                      <div className="flex items-center gap-3 mt-4">
                         <button
-                          onClick={() =>
-                            updateQuantity(item.id, item.quantity - 1)
-                          }
-                          className="min-h-[40px] min-w-[40px] px-3 py-1 bg-blue-100 text-blue-700 rounded hover:bg-blue-200 transition touch-manipulation"
+                          onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                          className="min-h-[40px] min-w-[40px] px-3 py-1 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 transition"
+                          aria-label={`Decrease ${item.products.name} quantity`}
                         >
                           −
                         </button>
 
-                        <span className="font-medium text-gray-900 min-w-6 text-center">
-                          {item.quantity}
-                        </span>
+                        <span className="font-semibold text-gray-900 min-w-6 text-center">{item.quantity}</span>
 
                         <button
-                          onClick={() =>
-                            updateQuantity(item.id, item.quantity + 1)
-                          }
-                          className="min-h-[40px] min-w-[40px] px-3 py-1 bg-blue-100 text-blue-700 rounded hover:bg-blue-200 transition touch-manipulation"
+                          onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                          className="min-h-[40px] min-w-[40px] px-3 py-1 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 transition"
+                          aria-label={`Increase ${item.products.name} quantity`}
                         >
                           +
                         </button>
@@ -165,14 +185,13 @@ export default function Cart() {
                     </div>
 
                     <div className="text-left sm:text-right">
-                      <p className="hidden sm:block font-semibold text-gray-900">
-                        $
-                        {(item.products.price * item.quantity).toFixed(2)}
+                      <p className="font-semibold text-gray-900 text-base sm:text-lg">
+                        ${(item.products.price * item.quantity).toFixed(2)}
                       </p>
 
                       <button
                         onClick={() => removeItem(item.id)}
-                        className="text-sm text-red-600 hover:text-red-700 mt-2 transition min-h-[40px] px-2 touch-manipulation"
+                        className="text-sm text-red-600 hover:text-red-700 mt-2 transition min-h-[40px] px-2"
                       >
                         Remove
                       </button>
@@ -182,9 +201,25 @@ export default function Cart() {
               ))}
             </div>
 
-            {/* TOTAL + CHECKOUT */}
-            <div className="mt-6 sm:mt-10 bg-white rounded-2xl shadow-sm p-5 sm:p-6">
-              <div className="flex justify-between text-base sm:text-lg font-semibold text-gray-900">
+            <div className="bg-white rounded-2xl shadow-sm border border-blue-50 p-5 sm:p-6 lg:sticky lg:top-24">
+              <h2 className="text-lg font-semibold text-gray-900">Order Summary</h2>
+
+              <div className="mt-4 space-y-3 text-sm">
+                <div className="flex justify-between text-gray-600">
+                  <span>Items</span>
+                  <span>{itemCount}</span>
+                </div>
+                <div className="flex justify-between text-gray-600">
+                  <span>Subtotal</span>
+                  <span>${total.toFixed(2)}</span>
+                </div>
+                <div className="flex justify-between text-gray-600">
+                  <span>Shipping</span>
+                  <span>Calculated at checkout</span>
+                </div>
+              </div>
+
+              <div className="mt-4 pt-4 border-t flex justify-between text-base font-semibold text-gray-900">
                 <span>Total</span>
                 <span>${total.toFixed(2)}</span>
               </div>
@@ -194,12 +229,14 @@ export default function Cart() {
                 disabled={checkoutLoading}
                 className="mt-6 w-full bg-blue-600 text-white py-3 rounded-md font-medium hover:bg-blue-700 transition shadow-sm disabled:opacity-50"
               >
-                {checkoutLoading
-                  ? "Redirecting to payment..."
-                  : "Proceed to Checkout"}
+                {checkoutLoading ? "Redirecting to payment..." : "Proceed to Checkout"}
               </button>
+
+              <p className="text-xs text-gray-500 mt-3 text-center">
+                Secure Stripe checkout. Test cards work only with Stripe Test keys + Test webhook secret.
+              </p>
             </div>
-          </>
+          </div>
         )}
       </div>
     </section>

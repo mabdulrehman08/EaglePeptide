@@ -8,7 +8,8 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "server": "node server.js"
+    "server": "node server.js",
+    "backfill:product-descriptions": "node scripts/backfill-product-descriptions.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.94.0",

@@ -12,6 +12,7 @@ import Cart from "./pages/Cart";
 import Success from "./pages/Success";
 import RequireAuth from "./components/RequireAuth";
 import About from "./pages/About";
+import CheckoutCancelled from "./pages/CheckoutCancelled";
 
 
 function App() {
@@ -29,6 +30,7 @@ function App() {
           <Route path="/auth/callback" element={<AuthCallback />} />
           <Route path="/account" element={<Account />} />
           <Route path="/success" element={<Success />} />
+          <Route path="/cancel" element={<CheckoutCancelled />} />
           <Route path="/about" element={<About />} />
           
           <Route
