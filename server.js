@@ -130,7 +130,7 @@ app.post("/webhook", express.raw({ type: "application/json" }), async (req, res)
 
   if (event.type === "checkout.session.completed") {
     const session = event.data.object;
-    const userId = session.metadata?.userId;
+    const userId = session.metadata?.userId || session.client_reference_id;
     const total = (session.amount_total || 0) / 100;
 
     if (!userId || !session.id) {
@@ -156,7 +156,7 @@ app.post("/webhook", express.raw({ type: "application/json" }), async (req, res)
           user_id: userId,
           total,
           stripe_session_id: session.id,
-          status: "paid",
+          status: "completed",
         })
         .select()
         .single();
@@ -252,6 +252,7 @@ app.post("/create-checkout-session", async (req, res) => {
       payment_method_types: ["card"],
       line_items: lineItems,
       mode: "payment",
+      client_reference_id: user.id,
       metadata: {
         userId: user.id,
       },
