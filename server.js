@@ -29,6 +29,41 @@ for (const key of REQUIRED_ENV) {
   }
 }
 
+
+function getStripeModeFromSecretKey(secretKey) {
+  if (typeof secretKey !== "string") return null;
+  if (secretKey.startsWith("sk_test_")) return "test";
+  if (secretKey.startsWith("sk_live_")) return "live";
+  return null;
+}
+
+function getStripeModeFromWebhookSecret(webhookSecret) {
+  if (typeof webhookSecret !== "string") return null;
+  // Stripe webhook secrets are whsec_ in both test + live.
+  // Use optional STRIPE_WEBHOOK_MODE to avoid accidental key mixing.
+  const explicitMode = process.env.STRIPE_WEBHOOK_MODE;
+  if (explicitMode === "test" || explicitMode === "live") return explicitMode;
+  return null;
+}
+
+function validateStripeModeConfiguration() {
+  const keyMode = getStripeModeFromSecretKey(process.env.STRIPE_SECRET_KEY);
+  const webhookMode = getStripeModeFromWebhookSecret(process.env.STRIPE_WEBHOOK_SECRET);
+
+  if (!keyMode) {
+    throw new Error("Unrecognized STRIPE_SECRET_KEY format. Must start with sk_test_ or sk_live_.");
+  }
+
+  if (webhookMode && webhookMode !== keyMode) {
+    throw new Error(
+      `Stripe mode mismatch: STRIPE_SECRET_KEY is ${keyMode} but STRIPE_WEBHOOK_MODE is ${webhookMode}. Use matching test/test or live/live values.`
+    );
+  }
+
+  return keyMode;
+}
+
+const STRIPE_MODE = validateStripeModeConfiguration();
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 const supabaseAdmin = createClient(
@@ -94,6 +129,27 @@ async function requireAuthenticatedUser(req, res) {
   return data.user;
 }
 
+
+async function resolveUserIdFromSession(session) {
+  const directUserId = session.metadata?.userId || session.client_reference_id;
+  if (directUserId) return directUserId;
+
+  if (!session.id) return null;
+
+  const { data, error } = await supabaseAdmin
+    .from("checkout_session_links")
+    .select("user_id")
+    .eq("stripe_session_id", session.id)
+    .maybeSingle();
+
+  if (error) {
+    console.error("Checkout session link lookup failed:", error);
+    return null;
+  }
+
+  return data?.user_id || null;
+}
+
 function parseCheckoutRequestBody(body) {
   if (!body || typeof body !== "object" || Array.isArray(body)) {
     return { valid: false, error: "Invalid request body" };
@@ -130,11 +186,12 @@ app.post("/webhook", express.raw({ type: "application/json" }), async (req, res)
 
   if (event.type === "checkout.session.completed") {
     const session = event.data.object;
-    const userId = session.metadata?.userId;
+    const userId = await resolveUserIdFromSession(session);
     const total = (session.amount_total || 0) / 100;
 
     if (!userId || !session.id) {
-      return res.status(400).send("Missing required session metadata");
+      console.error("Missing user linkage for checkout session:", session.id);
+      return res.status(200).json({ received: true, skipped: "missing_user_linkage" });
     }
 
     try {
@@ -156,7 +213,7 @@ app.post("/webhook", express.raw({ type: "application/json" }), async (req, res)
           user_id: userId,
           total,
           stripe_session_id: session.id,
-          status: "paid",
+          status: "completed",
         })
         .select()
         .single();
@@ -252,12 +309,22 @@ app.post("/create-checkout-session", async (req, res) => {
       payment_method_types: ["card"],
       line_items: lineItems,
       mode: "payment",
+      client_reference_id: user.id,
       metadata: {
         userId: user.id,
       },
       success_url: `${CLIENT_URL}/success`,
-      cancel_url: `${CLIENT_URL}/cart`,
+      cancel_url: `${CLIENT_URL}/cancel`,
     });
+
+    const { error: linkError } = await supabaseAdmin.from("checkout_session_links").upsert({
+      stripe_session_id: session.id,
+      user_id: user.id,
+    });
+
+    if (linkError) {
+      console.error("Failed to persist checkout session link:", linkError);
+    }
 
     return res.json({ url: session.url });
   } catch (error) {
@@ -266,4 +333,4 @@ app.post("/create-checkout-session", async (req, res) => {
   }
 });
 
-app.listen(PORT, () => console.log(`✅ Stripe server running on port ${PORT}`));
+app.listen(PORT, () => console.log(`✅ Stripe server running on port ${PORT} (${STRIPE_MODE} mode)`));
