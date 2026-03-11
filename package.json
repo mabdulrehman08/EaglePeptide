@@ -9,7 +9,8 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "server": "node server.js",
-    "backfill:product-descriptions": "node scripts/backfill-product-descriptions.mjs"
+    "backfill:product-descriptions": "node scripts/backfill-product-descriptions.mjs",
+    "update:bac-water-price": "node scripts/update-bac-water-price.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.94.0",
