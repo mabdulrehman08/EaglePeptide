@@ -22,6 +22,11 @@ type Product = {
   price: number;
 };
 
+type ExistingCartItem = {
+  id: string;
+  quantity: number;
+};
+
 const imageMap: Record<string, string> = {
   "retatrutide": retatrutide,
   "melanotan-ii": mt2,
@@ -74,19 +79,55 @@ export default function ProductDetail() {
     const { data: userData } = await supabase.auth.getUser();
 
     if (!userData.user) {
+      setAdding(false);
       navigate("/login");
       return;
     }
 
-    const { error } = await supabase.from("cart_items").insert({
-      user_id: userData.user.id,
+    const userId = userData.user.id;
+
+    const { data: existingItem, error: existingError } = await supabase
+      .from("cart_items")
+      .select("id, quantity")
+      .eq("user_id", userId)
+      .eq("product_id", product.id)
+      .maybeSingle<ExistingCartItem>();
+
+    if (existingError) {
+      console.error("Failed to check existing cart item:", existingError);
+      setAdding(false);
+      alert("Failed to add to cart.");
+      return;
+    }
+
+    if (existingItem) {
+      const { error: updateError } = await supabase
+        .from("cart_items")
+        .update({ quantity: existingItem.quantity + 1 })
+        .eq("id", existingItem.id);
+
+      setAdding(false);
+
+      if (updateError) {
+        console.error("Failed to update cart quantity:", updateError);
+        alert("Failed to add to cart.");
+        return;
+      }
+
+      navigate("/cart");
+      return;
+    }
+
+    const { error: insertError } = await supabase.from("cart_items").insert({
+      user_id: userId,
       product_id: product.id,
       quantity: 1,
     });
 
     setAdding(false);
 
-    if (error) {
+    if (insertError) {
+      console.error("Failed to insert cart item:", insertError);
       alert("Failed to add to cart.");
       return;
     }
@@ -105,7 +146,6 @@ export default function ProductDetail() {
   return (
     <section className="py-16 sm:py-24 bg-gradient-to-b from-blue-50 to-white">
       <div className="max-w-7xl mx-auto px-5 sm:px-6 grid grid-cols-1 md:grid-cols-2 gap-8 sm:gap-12 md:gap-16 items-center">
-
         <div className="flex justify-center">
           <img
             src={imageMap[product.slug] ?? retatrutide}
@@ -115,9 +155,7 @@ export default function ProductDetail() {
         </div>
 
         <div>
-          <h1 className="text-3xl sm:text-4xl font-bold text-gray-900">
-            {product.name}
-          </h1>
+          <h1 className="text-3xl sm:text-4xl font-bold text-gray-900">{product.name}</h1>
 
           <p className="text-blue-700 mt-3 font-medium">
             {product.dosage} • {product.vials} vials
@@ -134,9 +172,7 @@ export default function ProductDetail() {
           </ul>
 
           <div className="mt-8 sm:mt-10">
-            <p className="text-2xl sm:text-3xl font-bold text-gray-900">
-              ${product.price}
-            </p>
+            <p className="text-2xl sm:text-3xl font-bold text-gray-900">${product.price}</p>
 
             <button
               onClick={handleAddToCart}

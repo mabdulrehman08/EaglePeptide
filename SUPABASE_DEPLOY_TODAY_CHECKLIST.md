@@ -143,3 +143,33 @@ where relname in ('orders','order_items','cart_items');
 7. Confirm `/account` shows the order for the same user.
 
 If step 7 fails while step 4 passes, your issue is almost always RLS policy mismatch.
+
+
+## 5) Stripe test mode vs live mode (important)
+
+If test cards fail with a "live webhook" style error, your keys are mixed.
+
+Use matching sets only:
+
+- **Local/staging testing**
+  - `STRIPE_SECRET_KEY=sk_test_...`
+  - `STRIPE_WEBHOOK_SECRET=whsec_...` from `stripe listen --forward-to ...`
+  - Use Stripe test card numbers.
+
+- **Production/live website**
+  - `STRIPE_SECRET_KEY=sk_live_...`
+  - `STRIPE_WEBHOOK_SECRET=whsec_...` from the live webhook endpoint in Stripe Dashboard
+  - Real cards only.
+
+Never mix `sk_test` with live webhook secret, or `sk_live` with test webhook secret.
+
+## 6) Do you need to do everything locally first?
+
+No, but this is the safest fast workflow:
+
+1. Validate schema/RLS in Supabase first (sections 1-3).
+2. Run local checkout once with Stripe test mode.
+3. Deploy backend.
+4. Run one production smoke order with a low amount.
+
+This avoids repeated live break/fix cycles.
