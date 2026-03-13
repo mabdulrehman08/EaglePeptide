@@ -207,7 +207,7 @@ export default function Cart() {
               </button>
 
               <p className="text-xs text-gray-500 mt-3 text-center">
-                Secure Stripe checkout. Test cards work only with Stripe Test keys + Test webhook secret.
+                Secure Stripe checkout. You can enter a coupon/promo code on the Stripe payment page.
               </p>
             </div>
           </div>

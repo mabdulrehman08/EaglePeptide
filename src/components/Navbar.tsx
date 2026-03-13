@@ -10,14 +10,12 @@ export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const navigate = useNavigate();
 
-  // Theme persistence
   useEffect(() => {
     const saved = localStorage.getItem("theme");
     if (saved === "dark") {
       document.documentElement.classList.add("dark");
       setDarkMode(true);
     } else if (saved === null) {
-      // Optional: system preference fallback
       if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
         document.documentElement.classList.add("dark");
         setDarkMode(true);
@@ -32,7 +30,6 @@ export default function Navbar() {
     setDarkMode(isDark);
   };
 
-  // Auth listener
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
@@ -57,16 +54,15 @@ export default function Navbar() {
 
   return (
     <nav
-      className="fixed top-0 left-0 right-0 z-50 bg-blue-900/95 dark:bg-gray-950/95 backdrop-blur-sm border-b border-blue-800/50 dark:border-gray-800/50 shadow-sm"
+      className="fixed top-0 left-0 right-0 z-50 bg-gradient-to-r from-blue-950 via-blue-900 to-blue-950/95 dark:from-slate-950 dark:via-blue-950 dark:to-slate-950 backdrop-blur-md border-b border-blue-800/60 dark:border-slate-800 shadow-sm"
       aria-label="Main navigation"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <div className="flex items-center justify-between h-14 sm:h-16">
-          {/* Logo */}
           <Link
             to="/"
             onClick={closeMenu}
-            className="flex items-center gap-2.5 focus:outline-none focus:ring-2 focus:ring-blue-400 rounded"
+            className="flex items-center gap-2.5 focus:outline-none focus:ring-2 focus:ring-blue-300 rounded"
             aria-label="Eagle Peptide Home"
           >
             <img
@@ -75,77 +71,53 @@ export default function Navbar() {
               className="h-8 sm:h-9 w-auto object-contain"
             />
             <span className="text-xl sm:text-2xl font-extrabold text-white tracking-tight">
-              Eagle<span className="text-red-400">Peptide</span>
+              Eagle<span className="text-blue-200">Peptide</span>
             </span>
           </Link>
 
-          {/* Desktop Nav */}
-          <div className="hidden md:flex items-center gap-6 lg:gap-8 text-sm font-medium text-blue-200">
-            <Link
-              to="/"
-              className="hover:text-white transition-colors focus:text-white focus:outline-none focus:ring-2 focus:ring-blue-400 rounded px-1 py-1"
-            >
-              Home
-            </Link>
-            <a
-              href="/#products"
-              className="hover:text-white transition-colors focus:text-white focus:outline-none focus:ring-2 focus:ring-blue-400 rounded px-1 py-1"
-            >
-              Products
-            </a>
-            <Link
-              to="/about"
-              className="hover:text-white transition-colors focus:text-white focus:outline-none focus:ring-2 focus:ring-blue-400 rounded px-1 py-1"
-            >
-              About
-            </Link>
+          <div className="hidden md:flex items-center gap-6 lg:gap-8 text-sm font-medium text-blue-100">
+            <Link to="/" className="hover:text-white transition-colors focus:text-white focus:outline-none focus:ring-2 focus:ring-blue-300 rounded px-1 py-1">Home</Link>
+            <Link to="/#products" className="hover:text-white transition-colors focus:text-white focus:outline-none focus:ring-2 focus:ring-blue-300 rounded px-1 py-1">Products</Link>
+            <Link to="/about" className="hover:text-white transition-colors focus:text-white focus:outline-none focus:ring-2 focus:ring-blue-300 rounded px-1 py-1">About</Link>
 
             <button
               onClick={toggleDark}
-              className="text-xl hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-blue-400 rounded p-1"
-              title="Toggle dark mode"
+              className="text-blue-100 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-blue-300 rounded p-2"
+              title="Toggle theme"
               aria-label={darkMode ? "Switch to light mode" : "Switch to dark mode"}
             >
-              {darkMode ? "☀️" : "🌙"}
+              {darkMode ? (
+                <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
+                  <circle cx="12" cy="12" r="4" />
+                  <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" />
+                </svg>
+              ) : (
+                <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
+                  <path d="M21 12.79A9 9 0 1 1 11.21 3c-.02.16-.03.32-.03.49a8 8 0 0 0 8.33 8.3c.5 0 1-.03 1.49-.1Z" />
+                </svg>
+              )}
             </button>
 
             {!session ? (
               <div className="flex items-center gap-5">
-                <Link
-                  to="/login"
-                  className="hover:text-white transition-colors focus:text-white focus:outline-none focus:ring-2 focus:ring-blue-400 rounded px-2 py-1"
-                >
-                  Login
-                </Link>
-                <Link
-                  to="/signup"
-                  className="px-5 py-2 bg-red-600 text-white rounded-md font-semibold hover:bg-red-700 focus:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-400 transition-colors shadow-sm"
-                >
-                  Sign Up
-                </Link>
+                <Link to="/login" className="hover:text-white transition-colors focus:text-white focus:outline-none focus:ring-2 focus:ring-blue-300 rounded px-2 py-1">Login</Link>
+                <Link to="/signup" className="px-5 py-2 bg-white text-blue-900 rounded-md font-semibold hover:bg-blue-50 focus:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-300 transition-colors shadow-sm">Sign Up</Link>
               </div>
             ) : (
               <div className="flex items-center gap-5">
-                <Link
-                  to="/cart"
-                  className="hover:text-white transition-colors focus:text-white focus:outline-none focus:ring-2 focus:ring-blue-400 rounded px-2 py-1"
-                >
-                  Cart
-                </Link>
+                <Link to="/cart" className="hover:text-white transition-colors focus:text-white focus:outline-none focus:ring-2 focus:ring-blue-300 rounded px-2 py-1">Cart</Link>
                 <Link
                   to="/account"
-                  className="text-blue-200 hover:text-white transition-colors focus:text-white focus:outline-none focus:ring-2 focus:ring-blue-400 rounded px-2 py-1 max-w-[160px] truncate"
+                  className="text-blue-100 hover:text-white transition-colors focus:text-white focus:outline-none focus:ring-2 focus:ring-blue-300 rounded px-2 py-1 max-w-[160px] truncate"
                   title={session.user.email || "Account"}
                 >
                   {session.user.user_metadata?.first_name
-                    ? `${session.user.user_metadata.first_name} ${
-                        session.user.user_metadata.last_name ?? ""
-                      }`.trim()
+                    ? `${session.user.user_metadata.first_name} ${session.user.user_metadata.last_name ?? ""}`.trim()
                     : session.user.email?.split("@")[0] || "Account"}
                 </Link>
                 <button
                   onClick={handleLogout}
-                  className="px-4 py-1.5 border border-red-400 text-red-300 rounded-md font-medium hover:bg-red-600 hover:text-white hover:border-red-600 focus:outline-none focus:ring-2 focus:ring-red-400 transition-colors"
+                  className="px-4 py-1.5 border border-blue-300/50 text-blue-100 rounded-md font-medium hover:bg-blue-800 hover:text-white hover:border-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-300 transition-colors"
                 >
                   Logout
                 </button>
@@ -153,54 +125,38 @@ export default function Navbar() {
             )}
           </div>
 
-          {/* Mobile: Dark toggle + Hamburger */}
           <div className="flex md:hidden items-center gap-4">
             <button
               onClick={toggleDark}
-              className="text-xl hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-blue-400 rounded p-2"
-              title="Toggle dark mode"
+              className="text-blue-100 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-blue-300 rounded p-2"
+              title="Toggle theme"
               aria-label={darkMode ? "Switch to light mode" : "Switch to dark mode"}
             >
-              {darkMode ? "🌕" : "⏾"}
+              {darkMode ? (
+                <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
+                  <circle cx="12" cy="12" r="4" />
+                  <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" />
+                </svg>
+              ) : (
+                <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
+                  <path d="M21 12.79A9 9 0 1 1 11.21 3c-.02.16-.03.32-.03.49a8 8 0 0 0 8.33 8.3c.5 0 1-.03 1.49-.1Z" />
+                </svg>
+              )}
             </button>
 
             <button
               onClick={() => setMenuOpen(!menuOpen)}
-              className="p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-400 touch-manipulation"
+              className="p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-300 touch-manipulation"
               aria-label="Toggle mobile menu"
               aria-expanded={menuOpen}
             >
               {menuOpen ? (
-                // X icon
-                <svg
-                  className="h-7 w-7"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  aria-hidden="true"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M6 18L18 6M6 6l12 12"
-                  />
+                <svg className="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                 </svg>
               ) : (
-                // Hamburger
-                <svg
-                  className="h-7 w-7"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  aria-hidden="true"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M4 6h16M4 12h16M4 18h16"
-                  />
+                <svg className="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
                 </svg>
               )}
             </button>
@@ -208,72 +164,24 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* Mobile Menu - Slide down with animation */}
-      <div
-        className={`
-          md:hidden overflow-hidden transition-all duration-300 ease-in-out
-          ${menuOpen ? "max-h-screen opacity-100" : "max-h-0 opacity-0"}
-        `}
-      >
-        <div className="px-4 pt-2 pb-5 bg-blue-900/95 dark:bg-gray-950/95 border-t border-blue-800/50 dark:border-gray-800/50 flex flex-col gap-2 text-base font-medium text-blue-100">
-          <Link
-            to="/"
-            onClick={closeMenu}
-            className="py-3 px-4 hover:bg-blue-800/50 dark:hover:bg-gray-800/50 rounded-lg transition-colors focus:outline-none focus:bg-blue-800/50"
-          >
-            Home
-          </Link>
-          <a
-            href="/#products"
-            onClick={closeMenu}
-            className="py-3 px-4 hover:bg-blue-800/50 dark:hover:bg-gray-800/50 rounded-lg transition-colors focus:outline-none focus:bg-blue-800/50"
-          >
-            Products
-          </a>
-          <Link
-            to="/about"
-            onClick={closeMenu}
-            className="py-3 px-4 hover:bg-blue-800/50 dark:hover:bg-gray-800/50 rounded-lg transition-colors focus:outline-none focus:bg-blue-800/50"
-          >
-            About
-          </Link>
+      <div className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out ${menuOpen ? "max-h-screen opacity-100" : "max-h-0 opacity-0"}`}>
+        <div className="px-4 pt-2 pb-5 bg-blue-950/95 dark:bg-slate-950/95 border-t border-blue-800/60 dark:border-slate-800/50 flex flex-col gap-2 text-base font-medium text-blue-100">
+          <Link to="/" onClick={closeMenu} className="py-3 px-4 hover:bg-blue-900/60 dark:hover:bg-slate-800/50 rounded-lg transition-colors focus:outline-none focus:bg-blue-900/60">Home</Link>
+          <Link to="/#products" onClick={closeMenu} className="py-3 px-4 hover:bg-blue-900/60 dark:hover:bg-slate-800/50 rounded-lg transition-colors focus:outline-none focus:bg-blue-900/60">Products</Link>
+          <Link to="/about" onClick={closeMenu} className="py-3 px-4 hover:bg-blue-900/60 dark:hover:bg-slate-800/50 rounded-lg transition-colors focus:outline-none focus:bg-blue-900/60">About</Link>
 
-          <div className="border-t border-blue-800/50 dark:border-gray-700/50 my-2 pt-4 flex flex-col gap-3">
+          <div className="border-t border-blue-800/60 dark:border-slate-700/50 my-2 pt-4 flex flex-col gap-3">
             {!session ? (
               <>
-                <Link
-                  to="/login"
-                  onClick={closeMenu}
-                  className="py-3 px-4 hover:bg-blue-800/50 dark:hover:bg-gray-800/50 rounded-lg transition-colors focus:outline-none focus:bg-blue-800/50"
-                >
-                  Login
-                </Link>
-                <Link
-                  to="/signup"
-                  onClick={closeMenu}
-                  className="py-3 px-4 bg-red-600 text-white rounded-lg font-semibold text-center hover:bg-red-700 focus:bg-red-700 transition-colors focus:outline-none focus:ring-2 focus:ring-red-400"
-                >
-                  Sign Up
-                </Link>
+                <Link to="/login" onClick={closeMenu} className="py-3 px-4 hover:bg-blue-900/60 dark:hover:bg-slate-800/50 rounded-lg transition-colors focus:outline-none focus:bg-blue-900/60">Login</Link>
+                <Link to="/signup" onClick={closeMenu} className="py-3 px-4 bg-white text-blue-900 rounded-lg font-semibold text-center hover:bg-blue-50 focus:bg-blue-50 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-300">Sign Up</Link>
               </>
             ) : (
               <>
-                <Link
-                  to="/cart"
-                  onClick={closeMenu}
-                  className="py-3 px-4 hover:bg-blue-800/50 dark:hover:bg-gray-800/50 rounded-lg transition-colors focus:outline-none focus:bg-blue-800/50"
-                >
-                  Cart
-                </Link>
-                <Link
-                  to="/account"
-                  onClick={closeMenu}
-                  className="py-3 px-4 hover:bg-blue-800/50 dark:hover:bg-gray-800/50 rounded-lg transition-colors focus:outline-none focus:bg-blue-800/50 truncate"
-                >
+                <Link to="/cart" onClick={closeMenu} className="py-3 px-4 hover:bg-blue-900/60 dark:hover:bg-slate-800/50 rounded-lg transition-colors focus:outline-none focus:bg-blue-900/60">Cart</Link>
+                <Link to="/account" onClick={closeMenu} className="py-3 px-4 hover:bg-blue-900/60 dark:hover:bg-slate-800/50 rounded-lg transition-colors focus:outline-none focus:bg-blue-900/60 truncate">
                   {session.user.user_metadata?.first_name
-                    ? `${session.user.user_metadata.first_name} ${
-                        session.user.user_metadata.last_name ?? ""
-                      }`.trim()
+                    ? `${session.user.user_metadata.first_name} ${session.user.user_metadata.last_name ?? ""}`.trim()
                     : session.user.email?.split("@")[0] || "Account"}
                 </Link>
                 <button
@@ -281,7 +189,7 @@ export default function Navbar() {
                     handleLogout();
                     closeMenu();
                   }}
-                  className="py-3 px-4 border border-red-400 text-red-300 rounded-lg font-medium hover:bg-red-600 hover:text-white hover:border-red-600 focus:outline-none focus:ring-2 focus:ring-red-400 transition-colors"
+                  className="py-3 px-4 border border-blue-300/50 text-blue-100 rounded-lg font-medium hover:bg-blue-900 hover:text-white hover:border-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-300 transition-colors"
                 >
                   Logout
                 </button>
