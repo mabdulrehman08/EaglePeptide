@@ -274,6 +274,13 @@ app.post("/create-checkout-session", async (req, res) => {
       payment_method_types: ["card"],
       line_items: lineItems,
       mode: "payment",
+      billing_address_collection: "required",
+      shipping_address_collection: {
+        allowed_countries: ["US"],
+      },
+      phone_number_collection: {
+        enabled: true,
+      },
       client_reference_id: user.id,
       metadata: {
         userId: user.id,
