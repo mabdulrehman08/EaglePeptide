@@ -54,7 +54,7 @@ export default function Navbar() {
 
   return (
     <nav
-      className="fixed top-0 left-0 right-0 z-50 bg-gradient-to-r from-blue-950 via-blue-900 to-blue-950/95 dark:from-blue-950 dark:via-blue-900 dark:to-blue-950 backdrop-blur-md border-b border-blue-800/60 dark:border-slate-800 shadow-sm"
+      className="fixed top-0 left-0 right-0 z-50 bg-slate-950/95 dark:bg-black/90 backdrop-blur-md border-b border-slate-800/70 dark:border-gray-800 shadow-sm"
       aria-label="Main navigation"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
@@ -62,7 +62,7 @@ export default function Navbar() {
           <Link
             to="/"
             onClick={closeMenu}
-            className="flex items-center gap-2.5 focus:outline-none focus:ring-2 focus:ring-blue-300 rounded"
+            className="flex items-center gap-2.5 focus:outline-none focus:ring-2 focus:ring-slate-400 rounded"
             aria-label="Eagle Peptide Home"
           >
             <img
@@ -75,15 +75,31 @@ export default function Navbar() {
             </span>
           </Link>
 
-          <div className="hidden md:flex items-center gap-6 lg:gap-8 text-sm font-medium text-blue-100">
-            <Link to="/" className="hover:text-white transition-colors focus:text-white focus:outline-none focus:ring-2 focus:ring-blue-300 rounded px-1 py-1">Home</Link>
-            <Link to="/#products" className="hover:text-white transition-colors focus:text-white focus:outline-none focus:ring-2 focus:ring-blue-300 rounded px-1 py-1">Products</Link>
-            <Link to="/about" className="hover:text-white transition-colors focus:text-white focus:outline-none focus:ring-2 focus:ring-blue-300 rounded px-1 py-1">About</Link>
+          {/* Desktop Nav */}
+          <div className="hidden md:flex items-center gap-6 lg:gap-8 text-sm font-medium text-slate-300">
+            <Link
+              to="/"
+              className="hover:text-white transition-colors focus:text-white focus:outline-none focus:ring-2 focus:ring-slate-400 rounded px-1 py-1"
+            >
+              Home
+            </Link>
+            <Link
+              to="/#products"
+              className="hover:text-white transition-colors focus:text-white focus:outline-none focus:ring-2 focus:ring-slate-400 rounded px-1 py-1"
+            >
+              Products
+            </Link>
+            <Link
+              to="/about"
+              className="hover:text-white transition-colors focus:text-white focus:outline-none focus:ring-2 focus:ring-slate-400 rounded px-1 py-1"
+            >
+              About
+            </Link>
 
             <button
               onClick={toggleDark}
-              className="text-blue-100 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-blue-300 rounded p-2"
-              title="Toggle theme"
+              className="text-xl hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-slate-400 rounded p-1"
+              title="Toggle dark mode"
               aria-label={darkMode ? "Switch to light mode" : "Switch to dark mode"}
             >
               {darkMode ? (
@@ -100,15 +116,30 @@ export default function Navbar() {
 
             {!session ? (
               <div className="flex items-center gap-5">
-                <Link to="/login" className="hover:text-white transition-colors focus:text-white focus:outline-none focus:ring-2 focus:ring-blue-300 rounded px-2 py-1">Login</Link>
-                <Link to="/signup" className="px-5 py-2 bg-white text-blue-900 rounded-md font-semibold hover:bg-blue-50 focus:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-300 transition-colors shadow-sm">Sign Up</Link>
+                <Link
+                  to="/login"
+                  className="hover:text-white transition-colors focus:text-white focus:outline-none focus:ring-2 focus:ring-slate-400 rounded px-2 py-1"
+                >
+                  Login
+                </Link>
+                <Link
+                  to="/signup"
+                  className="px-5 py-2 bg-white text-slate-900 rounded-md font-semibold hover:bg-slate-100 focus:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-red-400 transition-colors shadow-sm"
+                >
+                  Sign Up
+                </Link>
               </div>
             ) : (
               <div className="flex items-center gap-5">
-                <Link to="/cart" className="hover:text-white transition-colors focus:text-white focus:outline-none focus:ring-2 focus:ring-blue-300 rounded px-2 py-1">Cart</Link>
+                <Link
+                  to="/cart"
+                  className="hover:text-white transition-colors focus:text-white focus:outline-none focus:ring-2 focus:ring-slate-400 rounded px-2 py-1"
+                >
+                  Cart
+                </Link>
                 <Link
                   to="/account"
-                  className="text-blue-100 hover:text-white transition-colors focus:text-white focus:outline-none focus:ring-2 focus:ring-blue-300 rounded px-2 py-1 max-w-[160px] truncate"
+                  className="text-slate-300 hover:text-white transition-colors focus:text-white focus:outline-none focus:ring-2 focus:ring-slate-400 rounded px-2 py-1 max-w-[160px] truncate"
                   title={session.user.email || "Account"}
                 >
                   {session.user.user_metadata?.first_name
@@ -117,7 +148,7 @@ export default function Navbar() {
                 </Link>
                 <button
                   onClick={handleLogout}
-                  className="px-4 py-1.5 border border-blue-300/50 text-blue-100 rounded-md font-medium hover:bg-blue-800 hover:text-white hover:border-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-300 transition-colors"
+                  className="px-4 py-1.5 border border-slate-500 text-slate-200 rounded-md font-medium hover:bg-slate-800 hover:text-white hover:border-slate-400 focus:outline-none focus:ring-2 focus:ring-red-400 transition-colors"
                 >
                   Logout
                 </button>
@@ -128,8 +159,8 @@ export default function Navbar() {
           <div className="flex md:hidden items-center gap-4">
             <button
               onClick={toggleDark}
-              className="text-blue-100 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-blue-300 rounded p-2"
-              title="Toggle theme"
+              className="text-xl hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-slate-400 rounded p-2"
+              title="Toggle dark mode"
               aria-label={darkMode ? "Switch to light mode" : "Switch to dark mode"}
             >
               {darkMode ? (
@@ -146,7 +177,7 @@ export default function Navbar() {
 
             <button
               onClick={() => setMenuOpen(!menuOpen)}
-              className="p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-300 touch-manipulation"
+              className="p-2 rounded focus:outline-none focus:ring-2 focus:ring-slate-400 touch-manipulation"
               aria-label="Toggle mobile menu"
               aria-expanded={menuOpen}
             >
@@ -164,22 +195,68 @@ export default function Navbar() {
         </div>
       </div>
 
-      <div className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out ${menuOpen ? "max-h-screen opacity-100" : "max-h-0 opacity-0"}`}>
-        <div className="px-4 pt-2 pb-5 bg-blue-950/95 dark:bg-blue-950/95 border-t border-blue-800/60 dark:border-blue-800/50 flex flex-col gap-2 text-base font-medium text-blue-100">
-          <Link to="/" onClick={closeMenu} className="py-3 px-4 hover:bg-blue-900/60 dark:hover:bg-blue-800/50 rounded-lg transition-colors focus:outline-none focus:bg-blue-900/60">Home</Link>
-          <Link to="/#products" onClick={closeMenu} className="py-3 px-4 hover:bg-blue-900/60 dark:hover:bg-blue-800/50 rounded-lg transition-colors focus:outline-none focus:bg-blue-900/60">Products</Link>
-          <Link to="/about" onClick={closeMenu} className="py-3 px-4 hover:bg-blue-900/60 dark:hover:bg-blue-800/50 rounded-lg transition-colors focus:outline-none focus:bg-blue-900/60">About</Link>
+      {/* Mobile Menu - Slide down with animation */}
+      <div
+        className={`
+          md:hidden overflow-hidden transition-all duration-300 ease-in-out
+          ${menuOpen ? "max-h-screen opacity-100" : "max-h-0 opacity-0"}
+        `}
+      >
+        <div className="px-4 pt-2 pb-5 bg-slate-950/95 dark:bg-black/90 border-t border-slate-800/70 dark:border-gray-800/50 flex flex-col gap-2 text-base font-medium text-slate-200">
+          <Link
+            to="/"
+            onClick={closeMenu}
+            className="py-3 px-4 hover:bg-slate-800/60 dark:hover:bg-gray-800/50 rounded-lg transition-colors focus:outline-none focus:bg-slate-800/60"
+          >
+            Home
+          </Link>
+          <Link
+            to="/#products"
+            onClick={closeMenu}
+            className="py-3 px-4 hover:bg-slate-800/60 dark:hover:bg-gray-800/50 rounded-lg transition-colors focus:outline-none focus:bg-slate-800/60"
+          >
+            Products
+          </Link>
+          <Link
+            to="/about"
+            onClick={closeMenu}
+            className="py-3 px-4 hover:bg-slate-800/60 dark:hover:bg-gray-800/50 rounded-lg transition-colors focus:outline-none focus:bg-slate-800/60"
+          >
+            About
+          </Link>
 
-          <div className="border-t border-blue-800/60 dark:border-blue-700/50 my-2 pt-4 flex flex-col gap-3">
+          <div className="border-t border-slate-800/70 dark:border-gray-700/50 my-2 pt-4 flex flex-col gap-3">
             {!session ? (
               <>
-                <Link to="/login" onClick={closeMenu} className="py-3 px-4 hover:bg-blue-900/60 dark:hover:bg-blue-800/50 rounded-lg transition-colors focus:outline-none focus:bg-blue-900/60">Login</Link>
-                <Link to="/signup" onClick={closeMenu} className="py-3 px-4 bg-white text-blue-900 rounded-lg font-semibold text-center hover:bg-blue-50 focus:bg-blue-50 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-300">Sign Up</Link>
+                <Link
+                  to="/login"
+                  onClick={closeMenu}
+                  className="py-3 px-4 hover:bg-slate-800/60 dark:hover:bg-gray-800/50 rounded-lg transition-colors focus:outline-none focus:bg-slate-800/60"
+                >
+                  Login
+                </Link>
+                <Link
+                  to="/signup"
+                  onClick={closeMenu}
+                  className="py-3 px-4 bg-white text-slate-900 rounded-lg font-semibold text-center hover:bg-slate-100 focus:bg-slate-100 transition-colors focus:outline-none focus:ring-2 focus:ring-red-400"
+                >
+                  Sign Up
+                </Link>
               </>
             ) : (
               <>
-                <Link to="/cart" onClick={closeMenu} className="py-3 px-4 hover:bg-blue-900/60 dark:hover:bg-blue-800/50 rounded-lg transition-colors focus:outline-none focus:bg-blue-900/60">Cart</Link>
-                <Link to="/account" onClick={closeMenu} className="py-3 px-4 hover:bg-blue-900/60 dark:hover:bg-blue-800/50 rounded-lg transition-colors focus:outline-none focus:bg-blue-900/60 truncate">
+                <Link
+                  to="/cart"
+                  onClick={closeMenu}
+                  className="py-3 px-4 hover:bg-slate-800/60 dark:hover:bg-gray-800/50 rounded-lg transition-colors focus:outline-none focus:bg-slate-800/60"
+                >
+                  Cart
+                </Link>
+                <Link
+                  to="/account"
+                  onClick={closeMenu}
+                  className="py-3 px-4 hover:bg-slate-800/60 dark:hover:bg-gray-800/50 rounded-lg transition-colors focus:outline-none focus:bg-slate-800/60 truncate"
+                >
                   {session.user.user_metadata?.first_name
                     ? `${session.user.user_metadata.first_name} ${session.user.user_metadata.last_name ?? ""}`.trim()
                     : session.user.email?.split("@")[0] || "Account"}
@@ -189,7 +266,7 @@ export default function Navbar() {
                     handleLogout();
                     closeMenu();
                   }}
-                  className="py-3 px-4 border border-blue-300/50 text-blue-100 rounded-lg font-medium hover:bg-blue-900 hover:text-white hover:border-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-300 transition-colors"
+                  className="py-3 px-4 border border-slate-500 text-slate-200 rounded-lg font-medium hover:bg-slate-800 hover:text-white hover:border-slate-400 focus:outline-none focus:ring-2 focus:ring-red-400 transition-colors"
                 >
                   Logout
                 </button>
