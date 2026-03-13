@@ -239,7 +239,7 @@ app.post("/create-checkout-session", async (req, res) => {
     // Authoritative pricing and quantity pulled server-side from DB (never trust client body prices/userId).
     const { data: cartRows, error: cartError } = await supabaseAdmin
       .from("cart_items")
-      .select("quantity, products(name, price)")
+      .select("quantity, products(name, price, slug)")
       .eq("user_id", user.id);
 
     if (cartError) {
@@ -253,10 +253,12 @@ app.post("/create-checkout-session", async (req, res) => {
 
     const lineItems = cartRows.map((item) => {
       const name = item.products?.name;
-      const price = item.products?.price;
+      const basePrice = item.products?.price;
+      const slug = item.products?.slug;
+      const price = slug === "bac-water" ? 10 : basePrice;
       const quantity = item.quantity;
 
-      if (!name || typeof price !== "number" || !Number.isFinite(price) || !Number.isInteger(quantity) || quantity < 1) {
+      if (!name || slug === "glp-3" || typeof price !== "number" || !Number.isFinite(price) || !Number.isInteger(quantity) || quantity < 1) {
         throw new Error("Invalid cart data");
       }
 

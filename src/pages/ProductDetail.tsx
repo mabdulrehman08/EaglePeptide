@@ -8,7 +8,6 @@ import mt2 from "../assets/mt2.jpg";
 import ipamorelin from "../assets/ipamorelin.jpg";
 import cjc1295 from "../assets/cjc1295.jpg";
 import ghkcu from "../assets/ghkcu.jpg";
-import glp3 from "../assets/glp3.jpg";
 import bpc157 from "../assets/bpc157.jpg";
 import bacwater from "../assets/bacwater.jpg";
 
@@ -33,7 +32,6 @@ const imageMap: Record<string, string> = {
   "ipamorelin": ipamorelin,
   "cjc-1295": cjc1295,
   "ghk-cu": ghkcu,
-  "glp-3": glp3,
   "bpc-157": bpc157,
   "bac-water": bacwater,
 };
@@ -58,11 +56,14 @@ export default function ProductDetail() {
         .eq("slug", slug)
         .single();
 
-      if (error) {
-        console.error(error);
+      if (error || slug === "glp-3") {
+        if (error) console.error(error);
         setProduct(null);
       } else {
-        setProduct(data);
+        setProduct({
+          ...data,
+          price: data.slug === "bac-water" ? 10 : data.price,
+        });
       }
 
       setLoading(false);

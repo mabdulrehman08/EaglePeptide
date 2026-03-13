@@ -31,3 +31,10 @@ for (const [slug, description] of Object.entries(descriptionsBySlug)) {
     console.log(`Updated description for ${slug}`);
   }
 }
+
+const { error: removeError } = await supabase.from("products").delete().eq("slug", "glp-3");
+if (removeError) {
+  console.error("Failed to remove glp-3:", removeError.message);
+} else {
+  console.log("Removed product with slug glp-3");
+}
