@@ -26,7 +26,7 @@ export default function Footer() {
                 Eagle<span className="text-red-400">Peptide</span>
               </span>
             </Link>
-            <p className="mt-3 max-w-sm text-blue-200">
+            <p className="mt-3 max-w-sm text-slate-300">
               Premium research peptides manufactured for laboratory and
               research use only.
             </p>
@@ -35,16 +35,16 @@ export default function Footer() {
           {/* Quick Links */}
           <div className="space-y-2">
             <p className="font-semibold text-white">Quick Links</p>
-            <Link to="/" className="block text-blue-200 hover:text-white transition">Home</Link>
-            <Link to="/#products" className="block text-blue-200 hover:text-white transition">Shop</Link>
-            <Link to="/about" className="block text-blue-200 hover:text-white transition">About</Link>
+            <Link to="/" className="block text-slate-300 hover:text-white transition">Home</Link>
+            <Link to="/#products" className="block text-slate-300 hover:text-white transition">Shop</Link>
+            <Link to="/about" className="block text-slate-300 hover:text-white transition">About</Link>
           </div>
 
           {/* Contact Info */}
           <div className="space-y-2">
             <p className="font-semibold text-white">Contact</p>
-            <p className="text-blue-200">muhammadabdulrehman513@gmail.com</p>
-            <p className="text-blue-200">215-397-5020</p>
+            <p className="text-slate-300">muhammadabdulrehman513@gmail.com</p>
+            <p className="text-slate-300">215-397-5020</p>
           </div>
 
           {/* Contact Form (desktop/tablet) */}
@@ -62,7 +62,7 @@ export default function Footer() {
                   value={form.name}
                   onChange={(e) => setForm({ ...form, name: e.target.value })}
                   required
-                  className="w-full px-3 py-2 rounded-md bg-blue-900 text-white placeholder-blue-300/60 border border-blue-800 focus:outline-none focus:border-blue-300 text-sm"
+                  className="w-full px-3 py-2 rounded-md bg-slate-900 text-white placeholder-slate-500 border border-slate-700 focus:outline-none focus:border-slate-400 text-sm"
                 />
                 <input
                   type="email"
@@ -70,7 +70,7 @@ export default function Footer() {
                   value={form.email}
                   onChange={(e) => setForm({ ...form, email: e.target.value })}
                   required
-                  className="w-full px-3 py-2 rounded-md bg-blue-900 text-white placeholder-blue-300/60 border border-blue-800 focus:outline-none focus:border-blue-300 text-sm"
+                  className="w-full px-3 py-2 rounded-md bg-slate-900 text-white placeholder-slate-500 border border-slate-700 focus:outline-none focus:border-slate-400 text-sm"
                 />
                 <textarea
                   placeholder="Your Message"
@@ -78,11 +78,11 @@ export default function Footer() {
                   onChange={(e) => setForm({ ...form, message: e.target.value })}
                   required
                   rows={3}
-                  className="w-full px-3 py-2 rounded-md bg-blue-900 text-white placeholder-blue-300/60 border border-blue-800 focus:outline-none focus:border-blue-300 text-sm resize-none"
+                  className="w-full px-3 py-2 rounded-md bg-slate-900 text-white placeholder-slate-500 border border-slate-700 focus:outline-none focus:border-slate-400 text-sm resize-none"
                 />
                 <button
                   type="submit"
-                  className="w-full py-2 bg-white hover:bg-blue-50 text-blue-900 rounded-md font-semibold transition"
+                  className="w-full py-2 bg-white hover:bg-slate-100 text-slate-900 rounded-md font-semibold transition"
                 >
                   Send Message
                 </button>
@@ -95,7 +95,7 @@ export default function Footer() {
         <div className="sm:hidden mt-4">
           <a
             href="mailto:muhammadabdulrehman513@gmail.com"
-            className="block w-full text-center py-3 bg-white hover:bg-blue-50 text-blue-900 rounded-md font-semibold transition"
+            className="block w-full text-center py-3 bg-white hover:bg-slate-100 text-slate-900 rounded-md font-semibold transition"
           >
             Contact Us by Email
           </a>

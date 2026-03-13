@@ -58,34 +58,34 @@ export default function Home() {
 
   return (
     <main className="min-h-screen bg-white dark:bg-gray-950 overflow-x-hidden">
-      <section className="pt-12 pb-14 sm:pt-18 sm:pb-22 md:pt-24 md:pb-28 bg-gradient-to-b from-blue-100 via-white to-white dark:from-slate-900 dark:to-gray-950">
+      <section className="pt-12 pb-14 sm:pt-18 sm:pb-22 md:pt-24 md:pb-28 bg-gradient-to-b from-slate-100 via-white to-white dark:from-gray-900 dark:to-gray-950">
         <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-16 items-center">
             <div className="text-center md:text-left space-y-6 md:space-y-8">
               <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold leading-tight text-gray-900 dark:text-white">
-                Trusted <span className="text-blue-900 dark:text-blue-200">Peptide Supply for Research Labs</span>
+                Professional <span className="text-slate-800 dark:text-slate-100">Research Peptide Supply</span>
               </h1>
               <p className="text-base sm:text-lg md:text-xl text-gray-600 dark:text-gray-400 max-w-xl mx-auto md:mx-0 leading-relaxed">
-                High-purity compounds with transparent labeling, reliable fulfillment, and secure checkout designed for legitimate laboratory procurement.
+                High-purity compounds with transparent labeling, reliable fulfillment, and secure checkout for serious research teams.
               </p>
 
               <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start mt-6 sm:mt-8">
                 <a
                   href="#products"
-                  className="w-full sm:w-auto inline-flex items-center justify-center px-8 py-4 min-h-[52px] bg-blue-900 text-white rounded-lg font-semibold text-base sm:text-lg hover:bg-blue-800 transition shadow-md"
+                  className="w-full sm:w-auto inline-flex items-center justify-center px-8 py-4 min-h-[52px] bg-slate-900 text-white rounded-lg font-semibold text-base sm:text-lg hover:bg-slate-800 transition shadow-md"
                 >
                   Shop Products
                 </a>
                 <Link
                   to="/about"
-                  className="w-full sm:w-auto inline-flex items-center justify-center px-8 py-4 min-h-[52px] border border-blue-300 dark:border-blue-700 text-blue-800 dark:text-blue-200 rounded-lg font-medium text-base sm:text-lg hover:bg-blue-50 dark:hover:bg-blue-950 transition"
+                  className="w-full sm:w-auto inline-flex items-center justify-center px-8 py-4 min-h-[52px] border border-slate-300 dark:border-gray-700 text-slate-700 dark:text-gray-300 rounded-lg font-medium text-base sm:text-lg hover:bg-slate-50 dark:hover:bg-gray-900 transition"
                 >
                   Learn More
                 </Link>
               </div>
             </div>
 
-            <div className="hidden md:flex rounded-2xl overflow-hidden items-center justify-center bg-white dark:bg-slate-900 border border-blue-200 dark:border-blue-900/50 w-full h-80 lg:h-[28rem] mx-auto shadow-sm">
+            <div className="hidden md:flex rounded-2xl overflow-hidden items-center justify-center bg-white dark:bg-gray-900 border border-slate-200 dark:border-gray-800 w-full h-80 lg:h-[28rem] mx-auto shadow-sm">
               <img
                 src={retatrutide}
                 alt="Featured Research Peptide"
