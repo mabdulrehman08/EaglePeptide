@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { supabase } from "../lib/supabase";
 import ProductCard from "../components/ProductCard";
@@ -57,35 +58,34 @@ export default function Home() {
 
   return (
     <main className="min-h-screen bg-white dark:bg-gray-950 overflow-x-hidden">
-      <section className="pt-10 pb-12 sm:pt-16 sm:pb-20 md:pt-24 md:pb-32 bg-gradient-to-b from-blue-50 to-white dark:from-gray-900 dark:to-gray-950">
+      <section className="pt-12 pb-14 sm:pt-18 sm:pb-22 md:pt-24 md:pb-28 bg-gradient-to-b from-slate-100 via-white to-white dark:from-gray-900 dark:to-gray-950">
         <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-16 items-center">
             <div className="text-center md:text-left space-y-6 md:space-y-8">
               <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold leading-tight text-gray-900 dark:text-white">
-                Premium <span className="text-blue-600 dark:text-blue-400">Research Peptides</span>
+                Professional <span className="text-slate-800 dark:text-slate-100">Research Peptide Supply</span>
               </h1>
               <p className="text-base sm:text-lg md:text-xl text-gray-600 dark:text-gray-400 max-w-xl mx-auto md:mx-0 leading-relaxed">
-                High-purity compounds for laboratory workflows with cleaner product detail,
-                better readability, and clearer shopping decisions.
+                High-purity compounds with transparent labeling, reliable fulfillment, and secure checkout for serious research teams.
               </p>
 
               <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start mt-6 sm:mt-8">
                 <a
                   href="#products"
-                  className="w-full sm:w-auto inline-flex items-center justify-center px-8 py-4 min-h-[52px] bg-blue-600 text-white rounded-lg font-medium text-base sm:text-lg hover:bg-blue-700 transition shadow-md"
+                  className="w-full sm:w-auto inline-flex items-center justify-center px-8 py-4 min-h-[52px] bg-slate-900 text-white rounded-lg font-semibold text-base sm:text-lg hover:bg-slate-800 transition shadow-md"
                 >
                   Shop Products
                 </a>
-                <a
-                  href="/about"
-                  className="w-full sm:w-auto inline-flex items-center justify-center px-8 py-4 min-h-[52px] border border-blue-300 dark:border-blue-600 text-blue-700 dark:text-blue-400 rounded-lg font-medium text-base sm:text-lg hover:bg-blue-50 dark:hover:bg-blue-900 transition"
+                <Link
+                  to="/about"
+                  className="w-full sm:w-auto inline-flex items-center justify-center px-8 py-4 min-h-[52px] border border-slate-300 dark:border-gray-700 text-slate-700 dark:text-gray-300 rounded-lg font-medium text-base sm:text-lg hover:bg-slate-50 dark:hover:bg-gray-900 transition"
                 >
                   Learn More
-                </a>
+                </Link>
               </div>
             </div>
 
-            <div className="hidden md:flex rounded-2xl overflow-hidden items-center justify-center bg-pink-50 dark:bg-gray-800 w-full h-80 lg:h-[28rem] mx-auto">
+            <div className="hidden md:flex rounded-2xl overflow-hidden items-center justify-center bg-white dark:bg-gray-900 border border-slate-200 dark:border-gray-800 w-full h-80 lg:h-[28rem] mx-auto shadow-sm">
               <img
                 src={retatrutide}
                 alt="Featured Research Peptide"
@@ -99,10 +99,10 @@ export default function Home() {
       <section id="products" className="pt-12 pb-16 sm:pt-16 sm:pb-20 lg:pt-20 lg:pb-24 bg-white dark:bg-gray-950">
         <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
           <h2 className="text-3xl sm:text-4xl font-bold mb-4 text-gray-900 dark:text-white text-center md:text-left">
-            Featured Products
+            Research Products
           </h2>
           <p className="text-gray-600 dark:text-gray-400 mb-8 sm:mb-12 text-center md:text-left">
-            Expanded product descriptions are now shown on cards and detail pages.
+            Clear specifications, pricing, and concise research-focused descriptions.
           </p>
 
           {loading && (

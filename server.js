@@ -274,6 +274,7 @@ app.post("/create-checkout-session", async (req, res) => {
       payment_method_types: ["card"],
       line_items: lineItems,
       mode: "payment",
+      allow_promotion_codes: true,
       billing_address_collection: "required",
       shipping_address_collection: {
         allowed_countries: ["US"],
