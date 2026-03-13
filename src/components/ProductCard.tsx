@@ -39,7 +39,7 @@ export default function ProductCard({
         {name}
       </h3>
 
-      <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+      <p className="text-sm text-slate-500 dark:text-slate-300 mt-1">
         {dosage} • {vials} vial{vials !== 1 ? "s" : ""}
       </p>
 
