@@ -14,7 +14,7 @@ export default function Footer() {
   };
 
   return (
-    <footer className="bg-blue-900 mt-24">
+    <footer className="bg-gradient-to-b from-blue-950 to-blue-900 mt-24 border-t border-blue-800">
       <div className="max-w-7xl mx-auto px-6 py-10 text-sm text-white">
         <div className="flex flex-col md:flex-row justify-between gap-8 md:gap-10">
 
@@ -36,7 +36,7 @@ export default function Footer() {
           <div className="space-y-2">
             <p className="font-semibold text-white">Quick Links</p>
             <Link to="/" className="block text-blue-200 hover:text-white transition">Home</Link>
-            <a href="/#products" className="block text-blue-200 hover:text-white transition">Shop</a>
+            <Link to="/#products" className="block text-blue-200 hover:text-white transition">Shop</Link>
             <Link to="/about" className="block text-blue-200 hover:text-white transition">About</Link>
           </div>
 
@@ -62,7 +62,7 @@ export default function Footer() {
                   value={form.name}
                   onChange={(e) => setForm({ ...form, name: e.target.value })}
                   required
-                  className="w-full px-3 py-2 rounded-md bg-blue-800 text-white placeholder-blue-400 border border-blue-700 focus:outline-none focus:border-blue-400 text-sm"
+                  className="w-full px-3 py-2 rounded-md bg-blue-900 text-white placeholder-blue-300/60 border border-blue-800 focus:outline-none focus:border-blue-300 text-sm"
                 />
                 <input
                   type="email"
@@ -70,7 +70,7 @@ export default function Footer() {
                   value={form.email}
                   onChange={(e) => setForm({ ...form, email: e.target.value })}
                   required
-                  className="w-full px-3 py-2 rounded-md bg-blue-800 text-white placeholder-blue-400 border border-blue-700 focus:outline-none focus:border-blue-400 text-sm"
+                  className="w-full px-3 py-2 rounded-md bg-blue-900 text-white placeholder-blue-300/60 border border-blue-800 focus:outline-none focus:border-blue-300 text-sm"
                 />
                 <textarea
                   placeholder="Your Message"
@@ -78,11 +78,11 @@ export default function Footer() {
                   onChange={(e) => setForm({ ...form, message: e.target.value })}
                   required
                   rows={3}
-                  className="w-full px-3 py-2 rounded-md bg-blue-800 text-white placeholder-blue-400 border border-blue-700 focus:outline-none focus:border-blue-400 text-sm resize-none"
+                  className="w-full px-3 py-2 rounded-md bg-blue-900 text-white placeholder-blue-300/60 border border-blue-800 focus:outline-none focus:border-blue-300 text-sm resize-none"
                 />
                 <button
                   type="submit"
-                  className="w-full py-2 bg-red-600 hover:bg-red-700 text-white rounded-md font-semibold transition"
+                  className="w-full py-2 bg-white hover:bg-blue-50 text-blue-900 rounded-md font-semibold transition"
                 >
                   Send Message
                 </button>
@@ -95,14 +95,14 @@ export default function Footer() {
         <div className="sm:hidden mt-4">
           <a
             href="mailto:muhammadabdulrehman513@gmail.com"
-            className="block w-full text-center py-3 bg-red-600 hover:bg-red-700 text-white rounded-md font-semibold transition"
+            className="block w-full text-center py-3 bg-white hover:bg-blue-50 text-blue-900 rounded-md font-semibold transition"
           >
             Contact Us by Email
           </a>
         </div>
 
         {/* Warning banner */}
-        <div className="mt-6 sm:mt-8 bg-red-600 rounded-lg px-4 py-3 text-white text-xs sm:text-sm">
+        <div className="mt-6 sm:mt-8 bg-blue-800/40 border border-blue-500/40 rounded-lg px-4 py-3 text-blue-100 text-xs sm:text-sm">
           <p>
             ⚠️ <strong>Research Use Only:</strong> Products sold on this website
             are intended strictly for laboratory research purposes. Not for
@@ -111,7 +111,7 @@ export default function Footer() {
         </div>
 
         {/* Bottom bar */}
-        <div className="mt-6 border-t border-blue-700 pt-6 flex flex-col md:flex-row justify-between items-center gap-3 text-xs text-blue-300">
+        <div className="mt-6 border-t border-blue-800 pt-6 flex flex-col md:flex-row justify-between items-center gap-3 text-xs text-blue-200/80">
           <p>© {new Date().getFullYear()} EaglePeptide. All rights reserved.</p>
           <div className="flex flex-wrap justify-center gap-3 sm:gap-4">
             <a href="#" className="hover:text-white transition">Privacy Policy</a>
