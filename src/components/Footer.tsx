@@ -8,7 +8,6 @@ export default function Footer() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Wire up EmailJS here later
     setSent(true);
     setForm({ name: "", email: "", message: "" });
   };
@@ -16,14 +15,12 @@ export default function Footer() {
   return (
     <footer className="bg-slate-950 mt-24 border-t border-slate-800">
       <div className="max-w-7xl mx-auto px-6 py-10 text-sm text-white">
-        <div className="flex flex-col md:flex-row justify-between gap-8 md:gap-10">
-
-          {/* Brand */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-10">
           <div>
             <Link to="/" className="flex items-center gap-2">
               <img src={logo} alt="Eagle Peptides" className="h-8 w-auto" />
               <span className="text-xl font-bold text-white tracking-tight">
-                Eagle<span className="text-red-400">Peptide</span>
+                Eagle<span className="text-blue-200">Peptide</span>
               </span>
             </Link>
             <p className="mt-3 max-w-sm text-slate-300">
@@ -32,7 +29,6 @@ export default function Footer() {
             </p>
           </div>
 
-          {/* Quick Links */}
           <div className="space-y-2">
             <p className="font-semibold text-white">Quick Links</p>
             <Link to="/" className="block text-slate-300 hover:text-white transition">Home</Link>
@@ -40,16 +36,14 @@ export default function Footer() {
             <Link to="/about" className="block text-slate-300 hover:text-white transition">About</Link>
           </div>
 
-          {/* Contact Info */}
           <div className="space-y-2">
             <p className="font-semibold text-white">Contact</p>
             <p className="text-slate-300">muhammadabdulrehman513@gmail.com</p>
             <p className="text-slate-300">215-397-5020</p>
           </div>
 
-          {/* Contact Form (desktop/tablet) */}
-          <div className="hidden sm:block w-full md:w-80">
-            <p className="font-semibold text-white mb-3">Send Us a Message</p>
+          <div>
+            <p className="font-semibold text-white mb-3">Send us a message</p>
             {sent ? (
               <div className="bg-green-600 rounded-lg px-4 py-3 text-white text-sm">
                 ✅ Message sent! We'll get back to you shortly.
@@ -104,20 +98,15 @@ export default function Footer() {
         {/* Warning banner */}
         <div className="mt-6 sm:mt-8 bg-amber-100/10 border border-amber-500/30 rounded-lg px-4 py-3 text-amber-100 text-xs sm:text-sm">
           <p>
-            ⚠️ <strong>Research Use Only:</strong> Products sold on this website
-            are intended strictly for laboratory research purposes. Not for
-            human or veterinary use. Must be 18+ to purchase.
+            By purchasing from Eagle Peptide, you acknowledge responsibility for lawful handling and use in accordance
+            with all applicable regulations and laboratory standards.
           </p>
         </div>
 
         {/* Bottom bar */}
         <div className="mt-6 border-t border-slate-800 pt-6 flex flex-col md:flex-row justify-between items-center gap-3 text-xs text-slate-400">
           <p>© {new Date().getFullYear()} EaglePeptide. All rights reserved.</p>
-          <div className="flex flex-wrap justify-center gap-3 sm:gap-4">
-            <a href="#" className="hover:text-white transition">Privacy Policy</a>
-            <a href="#" className="hover:text-white transition">Terms & Conditions</a>
-            <a href="#" className="hover:text-white transition">Shipping & Returns</a>
-          </div>
+          <p className="text-center">Research Use Only — Not for human or veterinary use.</p>
         </div>
       </div>
     </footer>
