@@ -1,112 +1,116 @@
 import { Link } from "react-router-dom";
-import logo from "../assets/logo.png"; // ← your actual logo (PNG/SVG recommended)
+import logo from "../assets/logo.png";
+
+const whyChooseUs = [
+  {
+    title: "Premium Products",
+    text: "Each product is sourced through strict quality standards and independent verification to support consistent research outcomes.",
+  },
+  {
+    title: "Wide Selection",
+    text: "Our catalog is curated to support a broad range of laboratory workflows across metabolic, recovery, and signaling studies.",
+  },
+  {
+    title: "Expert Support",
+    text: "Our team responds quickly through phone, email, and contact requests so your lab can stay on schedule.",
+  },
+];
 
 export default function About() {
   return (
     <>
-      {/* HERO - kept simple as requested */}
-      <section className="py-10 sm:py-12 md:py-16 bg-gradient-to-b from-blue-50 via-white to-white dark:from-gray-900 dark:via-gray-950 dark:to-gray-950">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          <div className="text-center mb-8 md:mb-10">
-            <img
-              src={logo}
-              alt="Eagle Peptide Logo"
-              className="mx-auto h-32 md:h-40 w-auto object-contain mb-6"
-            />
-            <h1 className="text-3xl sm:text-4xl md:text-6xl font-extrabold leading-tight text-gray-900 dark:text-white">
-              About{" "}
-              <span className="text-blue-700 dark:text-blue-400">Eagle Peptide</span>
-            </h1>
-            <p className="mt-4 sm:mt-6 text-base sm:text-lg md:text-xl text-gray-700 dark:text-gray-300 max-w-3xl mx-auto">
-              We are a US-based research peptide company committed to providing
-              the highest quality compounds for laboratory and scientific research.
-            </p>
+      <section className="py-12 sm:py-14 md:py-16 bg-gradient-to-b from-blue-100 via-white to-blue-50 dark:from-blue-950 dark:via-blue-900 dark:to-blue-950">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 text-center">
+          <img src={logo} alt="Eagle Peptide Logo" className="mx-auto h-24 md:h-32 w-auto object-contain mb-6" />
+          <p className="text-blue-800 dark:text-blue-200 font-semibold tracking-[0.18em] text-xs sm:text-sm uppercase">
+            US Manufactured Research Use Only Peptides
+          </p>
+          <h1 className="mt-4 text-3xl sm:text-4xl md:text-5xl font-extrabold text-slate-900 dark:text-white">
+            About Eagle Peptide
+          </h1>
+          <p className="mt-5 max-w-4xl mx-auto text-base sm:text-lg text-slate-700 dark:text-blue-100 leading-relaxed">
+            We are a family-run business built for serious research partners. Since launch, we have focused on one principle:
+            reliable quality with transparent service. Our process is designed around disciplined sourcing, lot consistency,
+            and clear communication from checkout to delivery.
+          </p>
+
+          <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link
               to="/#products"
-              className="mt-8 inline-flex items-center justify-center min-h-[48px] px-6 sm:px-8 py-3 sm:py-4 bg-red-600 text-white rounded-lg font-semibold text-base sm:text-lg hover:bg-red-700 transition shadow-md touch-manipulation"
+              className="inline-flex items-center justify-center min-h-[48px] px-7 py-3 bg-blue-900 text-white rounded-lg font-semibold hover:bg-blue-800 transition shadow-md"
             >
-              Shop Products
+              Please Login to See Our Research Peptides
             </Link>
+            <a
+              href="mailto:support@eaglepeptide.com"
+              className="inline-flex items-center justify-center min-h-[48px] px-7 py-3 border border-blue-300 dark:border-blue-600 text-blue-800 dark:text-blue-100 rounded-lg font-semibold hover:bg-blue-50 dark:hover:bg-blue-800/50 transition"
+            >
+              Contact Us
+            </a>
           </div>
         </div>
       </section>
 
-      {/* MISSION */}
-      <section className="py-12 sm:py-16 md:py-20 bg-white dark:bg-gray-950">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          <div className="max-w-3xl mx-auto text-center">
-            <h2 className="text-3xl sm:text-4xl font-bold text-blue-800 dark:text-blue-300">Our Mission</h2>
-            <p className="mt-6 text-gray-700 dark:text-gray-300 leading-relaxed text-lg">
-              At Eagle Peptide, our mission is to advance scientific research by
-              providing researchers with the purest, most reliable peptide compounds
-              available. Every product we manufacture goes through rigorous quality
-              control and third-party testing to ensure consistency and accuracy.
+      <section className="py-12 sm:py-16 bg-white dark:bg-blue-950">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-14 items-start">
+          <div>
+            <h2 className="text-2xl sm:text-3xl font-bold text-blue-900 dark:text-blue-200">Our Story</h2>
+            <p className="mt-4 text-slate-700 dark:text-blue-100 leading-relaxed">
+              Welcome to Eagle Peptide. We built this company to raise standards in the research peptide market: quality-first sourcing,
+              clear support channels, and fair pricing. We believe trust is earned through consistency and accountability—not marketing claims.
+            </p>
+            <p className="mt-4 text-slate-700 dark:text-blue-100 leading-relaxed">
+              Our goal is customer satisfaction and serving the research community with professional, dependable service.
+              We prioritize answering calls, emails, and support messages quickly so labs get answers without delays.
+            </p>
+            <p className="mt-4 text-sm font-medium text-slate-500 dark:text-blue-200">
+              All products are for research/testing only. We do not provide guidance for personal use.
+            </p>
+            <a
+              href="https://pubmed.ncbi.nlm.nih.gov/"
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex mt-5 text-sm font-semibold text-blue-700 dark:text-blue-300 hover:underline"
+            >
+              Visit PubMed to learn more about peptide research
+            </a>
+          </div>
+
+          <div className="rounded-2xl border border-blue-100 dark:border-blue-800 bg-blue-50/60 dark:bg-blue-900/40 p-6 sm:p-8">
+            <h3 className="text-xl font-bold text-slate-900 dark:text-white">Our Vision</h3>
+            <p className="mt-3 text-slate-700 dark:text-blue-100 leading-relaxed">
+              We work to stay upfront and honest with research partners, with transparent pricing and dependable quality controls.
+              We believe the way we do business should be as strong as the products we supply.
+            </p>
+            <p className="mt-3 text-slate-700 dark:text-blue-100 leading-relaxed">
+              Our mission is to support research organizations by providing high-purity compounds at fair prices,
+              while maintaining the integrity and long-term trust of the peptide research community.
             </p>
           </div>
         </div>
       </section>
 
-      {/* VALUES - Dark mode adjusted (darker bg, better text contrast) */}
-      <section className="py-12 sm:py-16 md:py-20 bg-blue-900 dark:bg-blue-950 text-white">
+      <section className="py-12 sm:py-16 bg-blue-900 dark:bg-blue-900 text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          <h2 className="text-3xl sm:text-4xl font-bold text-center mb-8 sm:mb-12 text-white">
-            Why Choose Us
-          </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 sm:gap-8">
-            {[
-              { emoji: "🏭", title: "US Manufactured", text: "All peptides manufactured in our cGMP compliant US-based facility ensuring the highest quality standards." },
-              { emoji: "🔬", title: "3rd Party Tested", text: "Every batch is independently verified for purity and potency by accredited third-party laboratories." },
-              { emoji: "🚚", title: "Same Day Shipping", text: "Orders placed before 3PM ET ship the same day via FedEx 2Day Air so you get your research compounds fast." },
-              { emoji: "💰", title: "Volume Discounts", text: "We offer volume discounts starting at 5 or more of the same product with even greater savings at 10+." },
-              { emoji: "✅", title: "30-Day Guarantee", text: "All unopened products come with a full money back 30-day quality guarantee. No questions asked." },
-              { emoji: "🤝", title: "Real Support", text: "Talk directly with our full-time US-based support team by chat, phone, or email anytime." },
-            ].map((item, index) => (
-              <div
-                key={index}
-                className="bg-white/10 dark:bg-white/5 backdrop-blur-sm rounded-2xl p-6 sm:p-8 border border-white/20 dark:border-gray-700 hover:border-red-400 dark:hover:border-red-500 transition-all duration-300"
-              >
-                <p className="text-4xl mb-4">{item.emoji}</p>
+          <h2 className="text-3xl sm:text-4xl font-bold text-center mb-10">Why Choose Us</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {whyChooseUs.map((item) => (
+              <article key={item.title} className="rounded-2xl border border-blue-700 bg-blue-950/30 p-6">
                 <h3 className="text-xl font-bold">{item.title}</h3>
-                <p className="mt-3 text-blue-200 dark:text-gray-300 text-sm leading-relaxed">
-                  {item.text}
-                </p>
-              </div>
+                <p className="mt-3 text-blue-100 text-sm leading-relaxed">{item.text}</p>
+              </article>
             ))}
           </div>
         </div>
       </section>
 
-      {/* CONTACT */}
-      <section className="py-12 sm:py-16 md:py-20 bg-white dark:bg-gray-950">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 text-center">
-          <h2 className="text-3xl sm:text-4xl font-bold text-blue-800 dark:text-blue-300">Get In Touch</h2>
-          <p className="mt-4 text-gray-600 dark:text-gray-400 text-lg">
-            Have questions about our products or need support? We're here to help.
-          </p>
-          <div className="mt-8 sm:mt-10 flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center">
-            <a
-              href="mailto:support@eaglepeptide.com"
-              className="inline-flex items-center justify-center min-h-[48px] px-6 sm:px-8 py-3 sm:py-4 bg-red-600 text-white rounded-lg font-semibold hover:bg-red-700 transition shadow-md touch-manipulation"
-            >
-              📧 support@eaglepeptide.com
-            </a>
-            <a
-              href="tel:+12153975020"
-              className="inline-flex items-center justify-center min-h-[48px] px-6 sm:px-8 py-3 sm:py-4 border-2 border-blue-600 text-blue-700 dark:border-blue-400 dark:text-blue-300 rounded-lg font-semibold hover:bg-blue-50 dark:hover:bg-blue-900 transition touch-manipulation"
-            >
-              📞 215-397-5020
-            </a>
-          </div>
-        </div>
-      </section>
-
-      {/* DISCLAIMER */}
-      <section className="py-8 sm:py-10 bg-gray-50 dark:bg-gray-900">
+      <section className="py-10 sm:py-12 bg-blue-950 text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          <p className="text-sm text-gray-500 dark:text-gray-400 text-center max-w-3xl mx-auto">
-            ⚠️ All products are intended strictly for laboratory research purposes only.
-            Not for human consumption, medical, or veterinary use. Must be 18+ to purchase.
-            These statements have not been evaluated by the FDA.
+          <p className="text-xs sm:text-sm leading-relaxed text-blue-100 text-center max-w-5xl mx-auto">
+            All products on this site are for research and development use only and not for human consumption.
+            Statements on this website have not been evaluated by the U.S. Food and Drug Administration.
+            Products are not intended to diagnose, treat, cure, or prevent any disease.
+            By purchasing, you acknowledge responsibility for lawful handling and research-only use.
           </p>
         </div>
       </section>
