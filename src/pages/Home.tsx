@@ -121,7 +121,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="products" className="pt-12 pb-16 sm:pt-16 sm:pb-20 lg:pt-20 lg:pb-24 bg-white dark:bg-gray-950">
+      <section id="products" className="pt-12 pb-16 sm:pt-16 sm:pb-20 lg:pt-20 lg:pb-24 bg-white dark:bg-blue-950">
         <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
           <h2 className="text-3xl sm:text-4xl font-bold mb-4 text-gray-900 dark:text-white text-center md:text-left">
             Research Products
