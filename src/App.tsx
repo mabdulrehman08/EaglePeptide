@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
 import ProductDetail from "./pages/ProductDetail";
@@ -40,6 +40,7 @@ function App() {
             }
             
           />
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main>
 
