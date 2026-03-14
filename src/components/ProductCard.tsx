@@ -19,6 +19,15 @@ export default function ProductCard({
   image,
   description,
 }: ProductCardProps) {
+  const handleMouseMove = (event: React.MouseEvent<HTMLAnchorElement>) => {
+    const card = event.currentTarget;
+    const rect = card.getBoundingClientRect();
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
+    card.style.setProperty("--mx", `${x}px`);
+    card.style.setProperty("--my", `${y}px`);
+  };
+
   return (
     <Link
       to={`/products/${slug}`}

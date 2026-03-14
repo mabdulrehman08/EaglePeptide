@@ -13,7 +13,7 @@ export default function Footer() {
   };
 
   return (
-    <footer className="bg-slate-950 mt-24 border-t border-slate-800">
+    <footer className="bg-gradient-to-b from-blue-950 to-blue-900 mt-24 border-t border-blue-800">
       <div className="max-w-7xl mx-auto px-6 py-10 text-sm text-white">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-10">
           <div>
@@ -96,7 +96,7 @@ export default function Footer() {
         </div>
 
         {/* Warning banner */}
-        <div className="mt-6 sm:mt-8 bg-amber-100/10 border border-amber-500/30 rounded-lg px-4 py-3 text-amber-100 text-xs sm:text-sm">
+        <div className="mt-6 sm:mt-8 bg-blue-800/40 border border-blue-500/40 rounded-lg px-4 py-3 text-blue-100 text-xs sm:text-sm">
           <p>
             By purchasing from Eagle Peptide, you acknowledge responsibility for lawful handling and use in accordance
             with all applicable regulations and laboratory standards.
@@ -104,7 +104,7 @@ export default function Footer() {
         </div>
 
         {/* Bottom bar */}
-        <div className="mt-6 border-t border-slate-800 pt-6 flex flex-col md:flex-row justify-between items-center gap-3 text-xs text-slate-400">
+        <div className="mt-6 border-t border-blue-800 pt-6 flex flex-col md:flex-row justify-between items-center gap-3 text-xs text-blue-200/80">
           <p>© {new Date().getFullYear()} EaglePeptide. All rights reserved.</p>
           <p className="text-center">Research Use Only — Not for human or veterinary use.</p>
         </div>
