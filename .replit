@@ -1,0 +1,42 @@
+modules = ["nodejs-20", "web"]
+[agent]
+expertMode = true
+
+[nix]
+channel = "stable-25_05"
+
+[workflows]
+runButton = "Project"
+
+[[workflows.workflow]]
+name = "Project"
+mode = "parallel"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Start application"
+
+[[workflows.workflow]]
+name = "Start application"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npm run start"
+waitForPort = 5000
+
+[workflows.workflow.metadata]
+outputType = "webview"
+
+[[ports]]
+localPort = 5000
+externalPort = 80
+
+[userenv]
+
+[userenv.shared]
+PORT = "4242"
+CLIENT_URL = "https://a588ddb5-d72a-4c14-ad40-18800712afb6-00-1rt8u44sbb2m7.worf.replit.dev"
+CORS_ORIGINS = "https://a588ddb5-d72a-4c14-ad40-18800712afb6-00-1rt8u44sbb2m7.worf.replit.dev"
+VITE_API_URL = ""
