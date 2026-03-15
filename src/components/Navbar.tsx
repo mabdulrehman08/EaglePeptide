@@ -54,7 +54,7 @@ export default function Navbar() {
 
   return (
     <nav
-      className="fixed top-0 left-0 right-0 z-50 bg-slate-950/95 dark:bg-black/90 backdrop-blur-md border-b border-slate-800/70 dark:border-gray-800 shadow-sm"
+      className="fixed top-0 left-0 right-0 z-50 bg-blue-800/95 backdrop-blur-md border-b border-blue-700/70 shadow-sm"
       aria-label="Main navigation"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
@@ -202,43 +202,43 @@ export default function Navbar() {
           ${menuOpen ? "max-h-screen opacity-100" : "max-h-0 opacity-0"}
         `}
       >
-        <div className="px-4 pt-2 pb-5 bg-slate-950/95 dark:bg-black/90 border-t border-slate-800/70 dark:border-gray-800/50 flex flex-col gap-2 text-base font-medium text-slate-200">
+        <div className="px-4 pt-2 pb-5 bg-blue-800/95 border-t border-blue-700/70 flex flex-col gap-2 text-base font-medium text-white">
           <Link
             to="/"
             onClick={closeMenu}
-            className="py-3 px-4 hover:bg-slate-800/60 dark:hover:bg-gray-800/50 rounded-lg transition-colors focus:outline-none focus:bg-slate-800/60"
+            className="py-3 px-4 hover:bg-blue-700/60 rounded-lg transition-colors focus:outline-none focus:bg-blue-700/60"
           >
             Home
           </Link>
           <Link
             to="/#products"
             onClick={closeMenu}
-            className="py-3 px-4 hover:bg-slate-800/60 dark:hover:bg-gray-800/50 rounded-lg transition-colors focus:outline-none focus:bg-slate-800/60"
+            className="py-3 px-4 hover:bg-blue-700/60 rounded-lg transition-colors focus:outline-none focus:bg-blue-700/60"
           >
             Products
           </Link>
           <Link
             to="/about"
             onClick={closeMenu}
-            className="py-3 px-4 hover:bg-slate-800/60 dark:hover:bg-gray-800/50 rounded-lg transition-colors focus:outline-none focus:bg-slate-800/60"
+            className="py-3 px-4 hover:bg-blue-700/60 rounded-lg transition-colors focus:outline-none focus:bg-blue-700/60"
           >
             About
           </Link>
 
-          <div className="border-t border-slate-800/70 dark:border-gray-700/50 my-2 pt-4 flex flex-col gap-3">
+          <div className="border-t border-blue-700/70 my-2 pt-4 flex flex-col gap-3">
             {!session ? (
               <>
                 <Link
                   to="/login"
                   onClick={closeMenu}
-                  className="py-3 px-4 hover:bg-slate-800/60 dark:hover:bg-gray-800/50 rounded-lg transition-colors focus:outline-none focus:bg-slate-800/60"
+                  className="py-3 px-4 hover:bg-blue-700/60 rounded-lg transition-colors focus:outline-none focus:bg-blue-700/60"
                 >
                   Login
                 </Link>
                 <Link
                   to="/signup"
                   onClick={closeMenu}
-                  className="py-3 px-4 bg-white text-slate-900 rounded-lg font-semibold text-center hover:bg-slate-100 focus:bg-slate-100 transition-colors focus:outline-none focus:ring-2 focus:ring-red-400"
+                  className="py-3 px-4 bg-white text-blue-800 rounded-lg font-semibold text-center hover:bg-blue-50 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-300"
                 >
                   Sign Up
                 </Link>
@@ -248,14 +248,14 @@ export default function Navbar() {
                 <Link
                   to="/cart"
                   onClick={closeMenu}
-                  className="py-3 px-4 hover:bg-slate-800/60 dark:hover:bg-gray-800/50 rounded-lg transition-colors focus:outline-none focus:bg-slate-800/60"
+                  className="py-3 px-4 hover:bg-blue-700/60 rounded-lg transition-colors focus:outline-none focus:bg-blue-700/60"
                 >
                   Cart
                 </Link>
                 <Link
                   to="/account"
                   onClick={closeMenu}
-                  className="py-3 px-4 hover:bg-slate-800/60 dark:hover:bg-gray-800/50 rounded-lg transition-colors focus:outline-none focus:bg-slate-800/60 truncate"
+                  className="py-3 px-4 hover:bg-blue-700/60 rounded-lg transition-colors focus:outline-none focus:bg-blue-700/60 truncate"
                 >
                   {session.user.user_metadata?.first_name
                     ? `${session.user.user_metadata.first_name} ${session.user.user_metadata.last_name ?? ""}`.trim()
@@ -266,7 +266,7 @@ export default function Navbar() {
                     handleLogout();
                     closeMenu();
                   }}
-                  className="py-3 px-4 border border-slate-500 text-slate-200 rounded-lg font-medium hover:bg-slate-800 hover:text-white hover:border-slate-400 focus:outline-none focus:ring-2 focus:ring-red-400 transition-colors"
+                  className="py-3 px-4 border border-blue-500 text-white rounded-lg font-medium hover:bg-blue-700 hover:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-300 transition-colors"
                 >
                   Logout
                 </button>

@@ -46,7 +46,7 @@ const serviceNotes = [
 export default function About() {
   return (
     <>
-      <section className="py-10 sm:py-12 md:py-16 bg-gradient-to-b from-blue-100 via-white to-white dark:from-slate-900 dark:via-gray-950 dark:to-gray-950">
+      <section className="py-10 sm:py-12 md:py-16 bg-gradient-to-b from-blue-100 via-white to-white dark:from-blue-900 dark:via-blue-950 dark:to-blue-950">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <div className="text-center mb-8 md:mb-10">
             <img
@@ -84,7 +84,7 @@ export default function About() {
         </div>
       </section>
 
-      <section className="py-12 sm:py-16 bg-white dark:bg-gray-950">
+      <section className="py-12 sm:py-16 bg-white dark:bg-blue-950">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-14 items-start">
           <div>
             <h2 className="text-2xl sm:text-3xl font-bold text-blue-900 dark:text-blue-200">Scientific Precision and Standards</h2>
@@ -102,7 +102,7 @@ export default function About() {
             </p>
           </div>
 
-          <div className="rounded-2xl border border-blue-100 dark:border-slate-800 bg-blue-50/50 dark:bg-slate-900 p-6 sm:p-8">
+          <div className="rounded-2xl border border-blue-100 dark:border-blue-800 bg-blue-50/50 dark:bg-blue-900 p-6 sm:p-8">
             <h3 className="text-xl font-bold text-slate-900 dark:text-white">The Eagle Peptide Promise</h3>
             <p className="mt-3 text-slate-700 dark:text-slate-300 leading-relaxed">
               Every compound begins with a science-led process, not shortcuts. Our team focuses on precision
@@ -135,14 +135,14 @@ export default function About() {
         </div>
       </section>
 
-      <section className="py-12 sm:py-16 bg-white dark:bg-gray-950">
+      <section className="py-12 sm:py-16 bg-white dark:bg-blue-950">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <h2 className="text-2xl sm:text-3xl font-bold text-blue-900 dark:text-blue-200 text-center">
             Shipping, Service, and Procurement Notes
           </h2>
           <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
             {serviceNotes.map((item) => (
-              <div key={item.title} className="rounded-xl border border-blue-100 dark:border-slate-800 p-5 sm:p-6 bg-white dark:bg-slate-900">
+              <div key={item.title} className="rounded-xl border border-blue-100 dark:border-blue-800 p-5 sm:p-6 bg-white dark:bg-blue-900">
                 <h3 className="font-semibold text-slate-900 dark:text-white">{item.title}</h3>
                 <p className="mt-3 text-sm text-slate-700 dark:text-slate-300 leading-relaxed">{item.body}</p>
               </div>

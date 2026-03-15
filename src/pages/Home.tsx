@@ -83,8 +83,8 @@ export default function Home() {
   }, []);
 
   return (
-    <main className="min-h-screen bg-white dark:bg-gray-950 overflow-x-hidden">
-      <section className="pt-12 pb-14 sm:pt-18 sm:pb-22 md:pt-24 md:pb-28 bg-gradient-to-b from-slate-100 via-white to-white dark:from-gray-900 dark:to-gray-950">
+    <main className="min-h-screen bg-white dark:bg-blue-950 overflow-x-hidden">
+      <section className="pt-12 pb-14 sm:pt-18 sm:pb-22 md:pt-24 md:pb-28 bg-gradient-to-b from-slate-100 via-white to-white dark:from-blue-900 dark:to-blue-950">
         <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-16 items-center">
             <div className="text-center md:text-left space-y-6 md:space-y-8">
@@ -125,7 +125,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="products" className="pt-12 pb-16 sm:pt-16 sm:pb-20 lg:pt-20 lg:pb-24 bg-white dark:bg-blue-950">
+      <section id="products" className="pt-12 pb-16 sm:pt-16 sm:pb-20 lg:pt-20 lg:pb-24 bg-white dark:bg-blue-900">
         <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
           <h2 className="text-3xl sm:text-4xl font-bold mb-4 text-gray-900 dark:text-white text-center md:text-left">
             Research Products
@@ -174,9 +174,9 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="py-12 sm:py-14 bg-white dark:bg-gray-950">
+      <section className="py-12 sm:py-14 bg-white dark:bg-blue-950">
         <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
-          <div className="rounded-2xl border border-blue-100 dark:border-slate-800 p-6 sm:p-8 bg-white dark:bg-slate-900">
+          <div className="rounded-2xl border border-blue-100 dark:border-blue-800 p-6 sm:p-8 bg-white dark:bg-blue-900">
             <h2 className="text-2xl sm:text-3xl font-bold text-blue-900 dark:text-blue-200">Operations and Service Commitments</h2>
             <ul className="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-3 text-slate-700 dark:text-slate-300 text-sm leading-relaxed">
               {serviceBenefits.map((item) => (
@@ -187,7 +187,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="py-8 sm:py-10 bg-white dark:bg-gray-950">
+      <section className="py-8 sm:py-10 bg-white dark:bg-blue-950">
         <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
           <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-600 text-center max-w-4xl mx-auto leading-relaxed">
             ⚠️ Research Use Only: All products are intended strictly for laboratory, research, or analytical use.
