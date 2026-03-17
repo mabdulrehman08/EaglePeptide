@@ -92,7 +92,7 @@ export default function Home() {
                 US Manufactured • Research Use Only
               </p>
               <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold leading-tight text-gray-900 dark:text-white">
-                Professional <span className="text-slate-800 dark:text-slate-100">Research Peptide Supply</span>
+                Trusted & Certified <span className="text-slate-800 dark:text-slate-100">Research Peptide Supply</span>
               </h1>
               <p className="text-base sm:text-lg md:text-xl text-gray-600 dark:text-gray-400 max-w-xl mx-auto md:mx-0 leading-relaxed">
                 High-purity compounds with transparent labeling, reliable fulfillment, and secure checkout for serious research teams.
