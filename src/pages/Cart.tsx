@@ -4,6 +4,7 @@ import { supabase } from "../lib/supabase";
 type ProductRef = {
   name: string;
   price: number;
+  slug?: string;
 };
 
 type CartItemRow = {
@@ -18,16 +19,22 @@ type CartItem = {
   products: ProductRef;
 };
 
+type SiteCoupon = {
+  code: string;
+  percentOff: number;
+};
+
 export default function Cart() {
   const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:4242";
   const [items, setItems] = useState<CartItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [checkoutLoading, setCheckoutLoading] = useState(false);
+  const [coupon, setCoupon] = useState<SiteCoupon | null>(null);
 
   const loadCart = async () => {
     const { data, error } = await supabase
       .from("cart_items")
-      .select("id, quantity, products(name, price)");
+      .select("id, quantity, products(name, price, slug)");
 
     if (error) {
       console.error(error);
@@ -40,7 +47,16 @@ export default function Cart() {
         }))
         .filter((row): row is CartItem => Boolean(row.products));
 
-      setItems(normalized);
+      const priced = normalized
+        .filter((row) => row.products.slug !== "glp-3")
+        .map((row) => ({
+          ...row,
+          products: {
+            ...row.products,
+            price: row.products.slug === "bac-water" ? 10 : row.products.price,
+          },
+        }));
+      setItems(priced);
     }
 
     setLoading(false);
@@ -49,6 +65,27 @@ export default function Cart() {
   useEffect(() => {
     loadCart();
   }, []);
+
+  useEffect(() => {
+    const loadCoupon = async () => {
+      try {
+        const response = await fetch(`${apiUrl}/site-config`);
+        if (!response.ok) return;
+
+        const data = await response.json();
+        if (data?.coupon?.code && typeof data?.coupon?.percentOff === "number") {
+          setCoupon({
+            code: data.coupon.code,
+            percentOff: data.coupon.percentOff,
+          });
+        }
+      } catch (error) {
+        console.error("Failed to load coupon config:", error);
+      }
+    };
+
+    loadCoupon();
+  }, [apiUrl]);
 
   const updateQuantity = async (id: string, quantity: number) => {
     if (quantity < 1) return;
@@ -193,6 +230,17 @@ export default function Cart() {
                 </div>
               </div>
 
+              {coupon && (
+                <div className="mt-4 rounded-xl border border-green-200 bg-green-50 p-3">
+                  <p className="text-sm font-semibold text-green-800">
+                    Coupon available: {coupon.code}
+                  </p>
+                  <p className="text-xs text-green-700 mt-1">
+                    Enter this code on Stripe checkout for {coupon.percentOff}% off.
+                  </p>
+                </div>
+              )}
+
               <div className="mt-4 pt-4 border-t flex justify-between text-base font-semibold text-gray-900">
                 <span>Total</span>
                 <span>${total.toFixed(2)}</span>
@@ -207,7 +255,7 @@ export default function Cart() {
               </button>
 
               <p className="text-xs text-gray-500 mt-3 text-center">
-                Secure Stripe checkout. Test cards work only with Stripe Test keys + Test webhook secret.
+                Secure Stripe checkout. You can enter a coupon/promo code on the Stripe payment page.
               </p>
             </div>
           </div>

@@ -41,6 +41,14 @@ const supabaseAuth = createClient(
   process.env.SUPABASE_ANON_KEY
 );
 
+const ADMIN_EMAILS = (process.env.ADMIN_EMAILS || "")
+  .split(",")
+  .map((value) => value.trim().toLowerCase())
+  .filter(Boolean);
+
+const SITE_COUPON_CODE = (process.env.SITE_COUPON_CODE || "").trim();
+const SITE_COUPON_PERCENT = Number(process.env.SITE_COUPON_PERCENT || 0);
+
 app.use(
   cors({
     origin(origin, callback) {
@@ -92,6 +100,11 @@ async function requireAuthenticatedUser(req, res) {
   }
 
   return data.user;
+}
+
+function isAdminUser(user) {
+  if (!user?.email) return false;
+  return ADMIN_EMAILS.includes(user.email.toLowerCase());
 }
 
 
@@ -219,6 +232,79 @@ app.post("/webhook", express.raw({ type: "application/json" }), async (req, res)
 // express.json AFTER webhook
 app.use(express.json({ limit: "100kb" }));
 
+app.get("/site-config", (_req, res) => {
+  const couponActive =
+    SITE_COUPON_CODE.length > 0 &&
+    Number.isFinite(SITE_COUPON_PERCENT) &&
+    SITE_COUPON_PERCENT > 0;
+
+  return res.json({
+    coupon: couponActive
+      ? {
+          code: SITE_COUPON_CODE,
+          percentOff: SITE_COUPON_PERCENT,
+        }
+      : null,
+  });
+});
+
+app.get("/admin/orders", async (req, res) => {
+  try {
+    const user = await requireAuthenticatedUser(req, res);
+    if (!user) return;
+
+    if (!isAdminUser(user)) {
+      return res.status(403).json({
+        error: "Admin access required. Add your email to ADMIN_EMAILS on the server.",
+      });
+    }
+
+    const { data: orders, error: ordersError } = await supabaseAdmin
+      .from("orders")
+      .select("id, user_id, total, status, stripe_session_id, created_at")
+      .order("created_at", { ascending: false })
+      .limit(200);
+
+    if (ordersError) {
+      console.error("Admin orders query failed:", ordersError);
+      return res.status(500).json({ error: "Failed to load orders" });
+    }
+
+    const orderIds = (orders || []).map((order) => order.id);
+    let itemsByOrderId = new Map();
+
+    if (orderIds.length > 0) {
+      const { data: items, error: itemsError } = await supabaseAdmin
+        .from("order_items")
+        .select("id, order_id, product_name, quantity, price, created_at")
+        .in("order_id", orderIds)
+        .order("created_at", { ascending: true });
+
+      if (itemsError) {
+        console.error("Admin order items query failed:", itemsError);
+        return res.status(500).json({ error: "Failed to load order items" });
+      }
+
+      itemsByOrderId = (items || []).reduce((map, item) => {
+        const existing = map.get(item.order_id) || [];
+        existing.push(item);
+        map.set(item.order_id, existing);
+        return map;
+      }, new Map());
+    }
+
+    const hydratedOrders = (orders || []).map((order) => ({
+      ...order,
+      items: itemsByOrderId.get(order.id) || [],
+    }));
+
+    return res.json({ orders: hydratedOrders });
+  } catch (error) {
+    console.error("Admin orders endpoint error:", error);
+    return res.status(500).json({ error: "Unexpected server error" });
+  }
+});
+
 app.post("/create-checkout-session", async (req, res) => {
   const ip = req.ip || req.socket.remoteAddress || "unknown";
   const throttle = applyRateLimit({ key: `checkout:${ip}`, limit: 25, windowMs: 60_000 });
@@ -239,7 +325,7 @@ app.post("/create-checkout-session", async (req, res) => {
     // Authoritative pricing and quantity pulled server-side from DB (never trust client body prices/userId).
     const { data: cartRows, error: cartError } = await supabaseAdmin
       .from("cart_items")
-      .select("quantity, products(name, price)")
+      .select("quantity, products(name, price, slug)")
       .eq("user_id", user.id);
 
     if (cartError) {
@@ -253,10 +339,12 @@ app.post("/create-checkout-session", async (req, res) => {
 
     const lineItems = cartRows.map((item) => {
       const name = item.products?.name;
-      const price = item.products?.price;
+      const basePrice = item.products?.price;
+      const slug = item.products?.slug;
+      const price = slug === "bac-water" ? 10 : basePrice;
       const quantity = item.quantity;
 
-      if (!name || typeof price !== "number" || !Number.isFinite(price) || !Number.isInteger(quantity) || quantity < 1) {
+      if (!name || slug === "glp-3" || typeof price !== "number" || !Number.isFinite(price) || !Number.isInteger(quantity) || quantity < 1) {
         throw new Error("Invalid cart data");
       }
 
@@ -274,6 +362,14 @@ app.post("/create-checkout-session", async (req, res) => {
       payment_method_types: ["card"],
       line_items: lineItems,
       mode: "payment",
+      allow_promotion_codes: true,
+      billing_address_collection: "required",
+      shipping_address_collection: {
+        allowed_countries: ["US"],
+      },
+      phone_number_collection: {
+        enabled: true,
+      },
       client_reference_id: user.id,
       metadata: {
         userId: user.id,

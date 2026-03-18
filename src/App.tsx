@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
 import ProductDetail from "./pages/ProductDetail";
@@ -12,6 +12,7 @@ import Cart from "./pages/Cart";
 import Success from "./pages/Success";
 import RequireAuth from "./components/RequireAuth";
 import About from "./pages/About";
+import AdminDashboard from "./pages/AdminDashboard";
 
 
 function App() {
@@ -30,6 +31,14 @@ function App() {
           <Route path="/account" element={<Account />} />
           <Route path="/success" element={<Success />} />
           <Route path="/about" element={<About />} />
+          <Route
+            path="/admin"
+            element={
+              <RequireAuth>
+                <AdminDashboard />
+              </RequireAuth>
+            }
+          />
           
           <Route
             path="/cart"
@@ -40,6 +49,7 @@ function App() {
             }
             
           />
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main>
 
