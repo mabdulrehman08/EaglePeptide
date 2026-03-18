@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../lib/supabase";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import type { User } from "@supabase/supabase-js";
 
 type Order = {
@@ -152,12 +152,12 @@ export default function Account() {
               <p className="text-5xl mb-4">📦</p>
               <p className="text-lg font-medium mb-2">No orders yet</p>
               <p className="text-sm mb-6">Start shopping to see your orders here!</p>
-              <a
-                href="/#products"
+              <Link
+                to="/#products"
                 className="inline-block px-6 py-3 bg-blue-600 text-white rounded-md font-medium hover:bg-blue-700 transition shadow-sm"
               >
                 Shop Now
-              </a>
+              </Link>
             </div>
           ) : (
             <div className="divide-y divide-gray-200">

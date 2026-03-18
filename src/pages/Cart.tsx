@@ -4,6 +4,7 @@ import { supabase } from "../lib/supabase";
 type ProductRef = {
   name: string;
   price: number;
+  slug?: string;
 };
 
 type CartItemRow = {
@@ -27,7 +28,7 @@ export default function Cart() {
   const loadCart = async () => {
     const { data, error } = await supabase
       .from("cart_items")
-      .select("id, quantity, products(name, price)");
+      .select("id, quantity, products(name, price, slug)");
 
     if (error) {
       console.error(error);
@@ -40,7 +41,16 @@ export default function Cart() {
         }))
         .filter((row): row is CartItem => Boolean(row.products));
 
-      setItems(normalized);
+      const priced = normalized
+        .filter((row) => row.products.slug !== "glp-3")
+        .map((row) => ({
+          ...row,
+          products: {
+            ...row.products,
+            price: row.products.slug === "bac-water" ? 10 : row.products.price,
+          },
+        }));
+      setItems(priced);
     }
 
     setLoading(false);
@@ -207,7 +217,7 @@ export default function Cart() {
               </button>
 
               <p className="text-xs text-gray-500 mt-3 text-center">
-                Secure Stripe checkout. Test cards work only with Stripe Test keys + Test webhook secret.
+                Secure Stripe checkout. You can enter a coupon/promo code on the Stripe payment page.
               </p>
             </div>
           </div>
