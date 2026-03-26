@@ -141,6 +141,10 @@ function parseCheckoutRequestBody(body) {
     return { valid: false, error: "items must be an array when provided" };
   }
 
+  if (body.couponCode !== undefined && typeof body.couponCode !== "string") {
+    return { valid: false, error: "couponCode must be a string when provided" };
+  }
+
   return { valid: true };
 }
 
@@ -257,6 +261,10 @@ app.post("/create-checkout-session", async (req, res) => {
   try {
     const user = await requireAuthenticatedUser(req, res);
     if (!user) return;
+    const normalizedCouponCode = String(req.body?.couponCode || "")
+      .trim()
+      .toUpperCase();
+    const applyEagle10Discount = normalizedCouponCode === EAGLE10_COUPON_CODE;
 
     const { data: cartRows, error: cartError } = await supabaseAdmin
       .from("cart_items")
@@ -276,7 +284,10 @@ app.post("/create-checkout-session", async (req, res) => {
       const name = item.products?.name;
       const basePrice = item.products?.price;
       const slug = item.products?.slug;
-      const price = slug === "bac-water" ? 10 : basePrice;
+      const baseCatalogPrice = slug === "bac-water" ? 10 : basePrice;
+      const price = applyEagle10Discount
+        ? baseCatalogPrice * ((100 - EAGLE10_DISCOUNT_PERCENT) / 100)
+        : baseCatalogPrice;
       const quantity = item.quantity;
 
       if (!name || slug === "glp-3" || typeof price !== "number" || !Number.isFinite(price) || !Number.isInteger(quantity) || quantity < 1) {
@@ -322,7 +333,10 @@ app.post("/create-checkout-session", async (req, res) => {
       console.error("Failed to persist checkout session link:", linkError);
     }
 
-    return res.json({ url: session.url });
+    return res.json({
+      url: session.url,
+      couponApplied: applyEagle10Discount,
+    });
   } catch (error) {
     console.error("Stripe session error:", error);
     return res.status(500).json({ error: "Failed to create checkout session" });

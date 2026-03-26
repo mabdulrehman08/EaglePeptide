@@ -24,6 +24,8 @@ export default function Cart() {
   const [items, setItems] = useState<CartItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [checkoutLoading, setCheckoutLoading] = useState(false);
+  const [couponCode, setCouponCode] = useState("EAGLE10");
+  const [couponMessage, setCouponMessage] = useState<string | null>(null);
 
   const loadCart = async () => {
     const { data, error } = await supabase
@@ -87,13 +89,15 @@ export default function Cart() {
         return;
       }
 
+      setCouponMessage(null);
+
       const response = await fetch(`${apiUrl}/create-checkout-session`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${session.access_token}`,
         },
-        body: JSON.stringify({ items: [] }),
+        body: JSON.stringify({ items: [], couponCode }),
       });
 
       const data = await response.json();
@@ -101,6 +105,14 @@ export default function Cart() {
       if (!response.ok) {
         alert(data.error || "Checkout failed.");
         return;
+      }
+
+      if (couponCode.trim()) {
+        setCouponMessage(
+          data.couponApplied
+            ? "✅ EAGLE10 applied. Discount will show in Stripe checkout."
+            : "⚠️ Coupon code not recognized. Continuing without discount."
+        );
       }
 
       if (data.url) {
@@ -120,6 +132,9 @@ export default function Cart() {
 
   const total = items.reduce((sum, item) => sum + item.quantity * item.products.price, 0);
   const itemCount = items.reduce((sum, item) => sum + item.quantity, 0);
+  const isEagle10 = couponCode.trim().toUpperCase() === "EAGLE10";
+  const discountAmount = isEagle10 ? total * 0.1 : 0;
+  const estimatedTotal = Math.max(total - discountAmount, 0);
 
   return (
     <section className="py-16 sm:py-24 bg-gradient-to-b from-blue-50 to-white min-h-screen">
@@ -197,6 +212,22 @@ export default function Cart() {
                   <span>Subtotal</span>
                   <span>${total.toFixed(2)}</span>
                 </div>
+                <div className="space-y-2">
+                  <label htmlFor="coupon-code" className="text-gray-600 block">
+                    Coupon Code
+                  </label>
+                  <input
+                    id="coupon-code"
+                    value={couponCode}
+                    onChange={(e) => setCouponCode(e.target.value)}
+                    placeholder="Enter coupon"
+                    className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-blue-500"
+                  />
+                </div>
+                <div className="flex justify-between text-gray-600">
+                  <span>Discount</span>
+                  <span>{isEagle10 ? `-$${discountAmount.toFixed(2)}` : "$0.00"}</span>
+                </div>
                 <div className="flex justify-between text-gray-600">
                   <span>Shipping</span>
                   <span>Calculated at checkout</span>
@@ -205,7 +236,7 @@ export default function Cart() {
 
               <div className="mt-4 pt-4 border-t flex justify-between text-base font-semibold text-gray-900">
                 <span>Total</span>
-                <span>${total.toFixed(2)}</span>
+                <span>${estimatedTotal.toFixed(2)}</span>
               </div>
 
               <button
@@ -217,8 +248,9 @@ export default function Cart() {
               </button>
 
               <p className="text-xs text-gray-500 mt-3 text-center">
-                Secure Stripe checkout. You can enter a coupon/promo code on the Stripe payment page.
+                Secure Stripe checkout. Code <span className="font-semibold">EAGLE10</span> gives 10% off.
               </p>
+              {couponMessage && <p className="text-xs mt-2 text-center text-gray-700">{couponMessage}</p>}
             </div>
           </div>
         )}
