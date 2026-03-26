@@ -19,8 +19,6 @@ const ADMIN_EMAILS = (process.env.ADMIN_EMAILS || "eaglepeptidite@gmail.com")
   .split(",")
   .map((email) => email.trim().toLowerCase())
   .filter(Boolean);
-const EAGLE10_COUPON_CODE = "EAGLE10";
-const EAGLE10_DISCOUNT_PERCENT = 10;
 
 const REQUIRED_ENV = [
   "STRIPE_SECRET_KEY",
