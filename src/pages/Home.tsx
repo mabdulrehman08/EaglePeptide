@@ -38,7 +38,7 @@ const highlights = [
 ];
 
 const serviceBenefits = [
-  "Same-day shipping on eligible orders placed before 3PM ET.",
+  "Shipping available across the USA and UK with same-day dispatch for eligible US orders before 3PM ET.",
   "Volume discounts starting at 5+ units of the same product.",
   "30-day quality guarantee on unopened items.",
   "Responsive support via phone, email, and contact form.",

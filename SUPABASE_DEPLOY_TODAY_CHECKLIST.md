@@ -173,3 +173,26 @@ No, but this is the safest fast workflow:
 4. Run one production smoke order with a low amount.
 
 This avoids repeated live break/fix cycles.
+
+## 8) Admin dashboard + analytics prerequisites
+Run this SQL in Supabase SQL editor:
+
+```sql
+create table if not exists public.website_sessions (
+  session_id text primary key,
+  user_id uuid null references auth.users(id) on delete set null,
+  started_at timestamptz not null default now(),
+  last_seen_at timestamptz not null default now(),
+  ended_at timestamptz null,
+  duration_seconds integer not null default 0
+);
+
+create index if not exists idx_website_sessions_started_at on public.website_sessions(started_at desc);
+create index if not exists idx_website_sessions_user_id on public.website_sessions(user_id);
+```
+
+Environment variables required for admin lock-down:
+- Frontend (`.env`): `VITE_ADMIN_EMAILS=eaglepeptidite@gmail.com`
+- Backend (`.env`): `ADMIN_EMAILS=eaglepeptidite@gmail.com`
+
+> Important: Admin password should be managed in Supabase Auth for that email only. Do **not** hardcode password values in frontend code.

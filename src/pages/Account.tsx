@@ -10,6 +10,14 @@ type Order = {
   created_at: string;
 };
 
+function getStatusClass(status: string) {
+  if (["delivered", "completed"].includes(status)) return "bg-green-100 text-green-800";
+  if (["pending", "processing", "ready_to_ship"].includes(status)) return "bg-yellow-100 text-yellow-800";
+  if (["cancelled", "failed"].includes(status)) return "bg-red-100 text-red-800";
+  if (["shipped"].includes(status)) return "bg-blue-100 text-blue-800";
+  return "bg-gray-100 text-gray-800";
+}
+
 export default function Account() {
   const [user, setUser] = useState<User | null>(null);
   const [orders, setOrders] = useState<Order[]>([]);
@@ -17,38 +25,7 @@ export default function Account() {
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    // 1. Get current session (fast initial render)
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (!session?.user) {
-        navigate("/login");
-        return;
-      }
-      setUser(session.user);
-      loadOrders(session.user.id);
-    });
-
-    // 2. Listen for future auth changes
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (!session?.user) {
-        navigate("/login");
-        setUser(null);
-        setOrders([]);
-      } else {
-        setUser(session.user);
-        loadOrders(session.user.id);
-      }
-    });
-
-    // Cleanup
-    return () => {
-      subscription.unsubscribe();
-    };
-  }, [navigate]);
-
-  const loadOrders = async (userId: string) => {
+  async function loadOrders(userId: string) {
     setLoading(true);
     setError(null);
 
@@ -66,7 +43,35 @@ export default function Account() {
     }
 
     setLoading(false);
-  };
+  }
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (!session?.user) {
+        navigate("/login");
+        return;
+      }
+      setUser(session.user);
+      loadOrders(session.user.id);
+    });
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (!session?.user) {
+        navigate("/login");
+        setUser(null);
+        setOrders([]);
+      } else {
+        setUser(session.user);
+        loadOrders(session.user.id);
+      }
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, [navigate]);
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
@@ -84,19 +89,16 @@ export default function Account() {
   const firstName = (user.user_metadata?.first_name as string) || "";
   const lastName = (user.user_metadata?.last_name as string) || "";
   const fullName = `${firstName} ${lastName}`.trim();
+  const fallbackName = user.email?.split("@")[0] || "Account";
+  const displayName = (user.user_metadata?.full_name as string) || fullName || fallbackName;
 
   return (
     <section className="min-h-screen bg-gradient-to-b from-blue-50 to-white py-20 md:py-28">
       <div className="max-w-4xl mx-auto px-6">
-        {/* Header */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-10 gap-4">
           <div>
-            <h1 className="text-3xl md:text-4xl font-bold text-gray-900">
-              {firstName ? `Welcome back, ${firstName}!` : "My Account"}
-            </h1>
-            <p className="text-gray-600 mt-1">
-              Manage your profile and view your order history.
-            </p>
+            <h1 className="text-3xl md:text-4xl font-bold text-gray-900">Welcome back, {displayName}!</h1>
+            <p className="text-gray-600 mt-1">Manage your profile and view your order history.</p>
           </div>
           <button
             onClick={handleLogout}
@@ -106,10 +108,13 @@ export default function Account() {
           </button>
         </div>
 
-        {/* Profile */}
         <div className="bg-white rounded-2xl shadow-sm p-8 mb-10">
           <h2 className="text-xl font-semibold text-gray-900 mb-6">Profile</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
+            <div>
+              <p className="text-sm text-gray-500 mb-1">Profile Name</p>
+              <p className="font-medium text-gray-900">{displayName}</p>
+            </div>
             {fullName && (
               <>
                 <div>
@@ -123,10 +128,6 @@ export default function Account() {
               </>
             )}
             <div>
-              <p className="text-sm text-gray-500 mb-1">Email</p>
-              <p className="font-medium text-gray-900 break-all">{user.email}</p>
-            </div>
-            <div>
               <p className="text-sm text-gray-500 mb-1">Member Since</p>
               <p className="font-medium text-gray-900">
                 {new Date(user.created_at).toLocaleDateString("en-US", {
@@ -139,7 +140,6 @@ export default function Account() {
           </div>
         </div>
 
-        {/* Orders */}
         <div className="bg-white rounded-2xl shadow-sm p-8">
           <h2 className="text-xl font-semibold text-gray-900 mb-6">Order History</h2>
 
@@ -162,14 +162,9 @@ export default function Account() {
           ) : (
             <div className="divide-y divide-gray-200">
               {orders.map((order) => (
-                <div
-                  key={order.id}
-                  className="py-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4"
-                >
+                <div key={order.id} className="py-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                   <div>
-                    <p className="text-base font-medium text-gray-900">
-                      Order #{order.id.slice(0, 8).toUpperCase()}
-                    </p>
+                    <p className="text-base font-medium text-gray-900">Order #{order.id.slice(0, 8).toUpperCase()}</p>
                     <p className="text-sm text-gray-500 mt-1">
                       {new Date(order.created_at).toLocaleDateString("en-US", {
                         year: "numeric",
@@ -179,21 +174,9 @@ export default function Account() {
                     </p>
                   </div>
                   <div className="text-right">
-                    <p className="text-lg font-bold text-gray-900">
-                      ${order.total.toFixed(2)}
-                    </p>
-                    <span
-                      className={`text-xs px-3 py-1 mt-2 inline-block rounded-full capitalize font-medium ${
-                        order.status === "completed"
-                          ? "bg-green-100 text-green-800"
-                          : order.status === "pending" || order.status === "processing"
-                          ? "bg-yellow-100 text-yellow-800"
-                          : order.status === "cancelled" || order.status === "failed"
-                          ? "bg-red-100 text-red-800"
-                          : "bg-gray-100 text-gray-800"
-                      }`}
-                    >
-                      {order.status}
+                    <p className="text-lg font-bold text-gray-900">${order.total.toFixed(2)}</p>
+                    <span className={`text-xs px-3 py-1 mt-2 inline-block rounded-full capitalize font-medium ${getStatusClass(order.status)}`}>
+                      {order.status.replaceAll("_", " ")}
                     </span>
                   </div>
                 </div>

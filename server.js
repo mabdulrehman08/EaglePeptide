@@ -15,6 +15,13 @@ const CORS_ORIGINS = (process.env.CORS_ORIGINS || CLIENT_URL)
   .map((s) => s.trim())
   .filter(Boolean);
 
+const ADMIN_EMAILS = (process.env.ADMIN_EMAILS || "eaglepeptidite@gmail.com")
+  .split(",")
+  .map((email) => email.trim().toLowerCase())
+  .filter(Boolean);
+const EAGLE10_COUPON_CODE = "EAGLE10";
+const EAGLE10_DISCOUNT_PERCENT = 10;
+
 const REQUIRED_ENV = [
   "STRIPE_SECRET_KEY",
   "STRIPE_WEBHOOK_SECRET",
@@ -48,7 +55,7 @@ app.use(
       if (CORS_ORIGINS.includes(origin)) return callback(null, true);
       return callback(new Error("CORS origin not allowed"));
     },
-    methods: ["GET", "POST", "OPTIONS"],
+    methods: ["GET", "POST", "PATCH", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
@@ -94,6 +101,18 @@ async function requireAuthenticatedUser(req, res) {
   return data.user;
 }
 
+async function requireAdminUser(req, res) {
+  const user = await requireAuthenticatedUser(req, res);
+  if (!user) return null;
+
+  const email = user.email?.toLowerCase();
+  if (!email || !ADMIN_EMAILS.includes(email)) {
+    res.status(403).json({ error: "Admin access only" });
+    return null;
+  }
+
+  return user;
+}
 
 async function resolveUserIdFromSession(session) {
   const directUserId = session.metadata?.userId || session.client_reference_id;
@@ -124,7 +143,17 @@ function parseCheckoutRequestBody(body) {
     return { valid: false, error: "items must be an array when provided" };
   }
 
+  if (body.couponCode !== undefined && typeof body.couponCode !== "string") {
+    return { valid: false, error: "couponCode must be a string when provided" };
+  }
+
   return { valid: true };
+}
+
+function normalizeOrderStatus(status) {
+  const allowed = new Set(["pending", "processing", "ready_to_ship", "shipped", "delivered", "cancelled", "failed"]);
+  const normalized = String(status || "").trim().toLowerCase();
+  return allowed.has(normalized) ? normalized : null;
 }
 
 // Webhook BEFORE express.json()
@@ -160,7 +189,6 @@ app.post("/webhook", express.raw({ type: "application/json" }), async (req, res)
     }
 
     try {
-      // Idempotency guard: if order for this Stripe session exists, acknowledge and exit.
       const { data: existingOrder, error: existingOrderError } = await supabaseAdmin
         .from("orders")
         .select("id")
@@ -178,7 +206,7 @@ app.post("/webhook", express.raw({ type: "application/json" }), async (req, res)
           user_id: userId,
           total,
           stripe_session_id: session.id,
-          status: "completed",
+          status: "pending",
         })
         .select()
         .single();
@@ -235,8 +263,11 @@ app.post("/create-checkout-session", async (req, res) => {
   try {
     const user = await requireAuthenticatedUser(req, res);
     if (!user) return;
+    const normalizedCouponCode = String(req.body?.couponCode || "")
+      .trim()
+      .toUpperCase();
+    const applyEagle10Discount = normalizedCouponCode === EAGLE10_COUPON_CODE;
 
-    // Authoritative pricing and quantity pulled server-side from DB (never trust client body prices/userId).
     const { data: cartRows, error: cartError } = await supabaseAdmin
       .from("cart_items")
       .select("quantity, products(name, price, slug)")
@@ -255,7 +286,10 @@ app.post("/create-checkout-session", async (req, res) => {
       const name = item.products?.name;
       const basePrice = item.products?.price;
       const slug = item.products?.slug;
-      const price = slug === "bac-water" ? 10 : basePrice;
+      const baseCatalogPrice = slug === "bac-water" ? 10 : basePrice;
+      const price = applyEagle10Discount
+        ? baseCatalogPrice * ((100 - EAGLE10_DISCOUNT_PERCENT) / 100)
+        : baseCatalogPrice;
       const quantity = item.quantity;
 
       if (!name || slug === "glp-3" || typeof price !== "number" || !Number.isFinite(price) || !Number.isInteger(quantity) || quantity < 1) {
@@ -279,7 +313,7 @@ app.post("/create-checkout-session", async (req, res) => {
       allow_promotion_codes: true,
       billing_address_collection: "required",
       shipping_address_collection: {
-        allowed_countries: ["US"],
+        allowed_countries: ["US", "GB"],
       },
       phone_number_collection: {
         enabled: true,
@@ -301,11 +335,144 @@ app.post("/create-checkout-session", async (req, res) => {
       console.error("Failed to persist checkout session link:", linkError);
     }
 
-    return res.json({ url: session.url });
+    return res.json({
+      url: session.url,
+      couponApplied: applyEagle10Discount,
+    });
   } catch (error) {
     console.error("Stripe session error:", error);
     return res.status(500).json({ error: "Failed to create checkout session" });
   }
+});
+
+app.get("/admin/orders", async (req, res) => {
+  const adminUser = await requireAdminUser(req, res);
+  if (!adminUser) return;
+
+  const { data, error } = await supabaseAdmin
+    .from("orders")
+    .select("id,user_id,total,status,stripe_session_id,created_at,order_items(id,order_id,product_name,quantity,price,created_at)")
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    console.error("Admin order fetch failed:", error);
+    return res.status(500).json({ error: "Failed to load orders" });
+  }
+
+  const orders = (data || []).map((order) => ({
+    ...order,
+    items: order.order_items || [],
+    order_items: undefined,
+  }));
+
+  return res.json({ orders });
+});
+
+app.patch("/admin/orders/:orderId/status", async (req, res) => {
+  const adminUser = await requireAdminUser(req, res);
+  if (!adminUser) return;
+
+  const { orderId } = req.params;
+  const status = normalizeOrderStatus(req.body?.status);
+
+  if (!status) {
+    return res.status(400).json({ error: "Invalid status" });
+  }
+
+  const { data, error } = await supabaseAdmin
+    .from("orders")
+    .update({ status })
+    .eq("id", orderId)
+    .select("id,status")
+    .single();
+
+  if (error) {
+    console.error("Order status update failed:", error);
+    return res.status(500).json({ error: "Failed to update order status" });
+  }
+
+  return res.json({ order: data });
+});
+
+app.post("/analytics/visit-start", async (req, res) => {
+  const sessionId = String(req.body?.sessionId || "").trim();
+  const userId = req.body?.userId ? String(req.body.userId) : null;
+
+  if (!sessionId) {
+    return res.status(400).json({ error: "sessionId is required" });
+  }
+
+  const { error } = await supabaseAdmin.from("website_sessions").upsert({
+    session_id: sessionId,
+    user_id: userId,
+    started_at: new Date().toISOString(),
+    last_seen_at: new Date().toISOString(),
+  });
+
+  if (error) {
+    console.error("visit-start failed:", error);
+    return res.status(500).json({ error: "Failed to log visit start" });
+  }
+
+  return res.json({ ok: true });
+});
+
+app.post("/analytics/visit-end", async (req, res) => {
+  const sessionId = String(req.body?.sessionId || "").trim();
+  const durationSeconds = Number(req.body?.durationSeconds || 0);
+
+  if (!sessionId) {
+    return res.status(400).json({ error: "sessionId is required" });
+  }
+
+  const safeDuration = Number.isFinite(durationSeconds) ? Math.max(0, Math.round(durationSeconds)) : 0;
+
+  const { error } = await supabaseAdmin
+    .from("website_sessions")
+    .update({
+      ended_at: new Date().toISOString(),
+      duration_seconds: safeDuration,
+      last_seen_at: new Date().toISOString(),
+    })
+    .eq("session_id", sessionId);
+
+  if (error) {
+    console.error("visit-end failed:", error);
+    return res.status(500).json({ error: "Failed to log visit end" });
+  }
+
+  return res.json({ ok: true });
+});
+
+app.get("/admin/analytics", async (req, res) => {
+  const adminUser = await requireAdminUser(req, res);
+  if (!adminUser) return;
+
+  const { data, error } = await supabaseAdmin
+    .from("website_sessions")
+    .select("session_id,user_id,started_at,ended_at,duration_seconds")
+    .order("started_at", { ascending: false })
+    .limit(5000);
+
+  if (error) {
+    console.error("Analytics fetch failed:", error);
+    return res.status(500).json({ error: "Failed to load analytics" });
+  }
+
+  const sessions = data || [];
+  const uniqueUsers = new Set(sessions.map((s) => s.user_id).filter(Boolean)).size;
+  const totalVisits = sessions.length;
+  const totalDuration = sessions.reduce((sum, s) => sum + (s.duration_seconds || 0), 0);
+  const avgDuration = totalVisits > 0 ? totalDuration / totalVisits : 0;
+
+  return res.json({
+    analytics: {
+      totalVisits,
+      uniqueUsers,
+      totalDurationSeconds: totalDuration,
+      averageDurationSeconds: avgDuration,
+    },
+  });
 });
 
 app.listen(PORT, () => console.log(`✅ Stripe server running on port ${PORT}`));
