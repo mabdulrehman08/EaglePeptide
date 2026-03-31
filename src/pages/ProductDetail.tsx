@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { supabase } from "../lib/supabase";
 import { getFullProductDescription } from "../lib/productDescriptions";
+import { getDiscountLabel, getFrontendPrice, getOriginalPrice } from "../lib/pricing";
 
 import retatrutide from "../assets/retatrutide.jpg";
 import mt2 from "../assets/mt2.jpg";
@@ -70,7 +71,7 @@ export default function ProductDetail() {
       } else {
         setProduct({
           ...data,
-          price: data.slug === "bac-water" ? 10 : data.price,
+          price: getFrontendPrice(data.slug, data.price),
         });
       }
 
@@ -153,6 +154,8 @@ export default function ProductDetail() {
   }
 
   const desc = getFullProductDescription(product.slug);
+  const originalPrice = getOriginalPrice(product.slug, product.price);
+  const discountLabel = getDiscountLabel(product.slug);
 
   return (
     <div className="bg-white min-h-screen">
@@ -183,7 +186,15 @@ export default function ProductDetail() {
             )}
 
             <div className="mt-8 sm:mt-10">
-              <p className="text-2xl sm:text-3xl font-bold text-gray-900">${product.price}</p>
+              {discountLabel && (
+                <p className="text-sm text-gray-500 line-through">
+                  ${originalPrice.toFixed(2)}
+                </p>
+              )}
+              <p className="text-2xl sm:text-3xl font-bold text-gray-900">${product.price.toFixed(2)}</p>
+              {discountLabel && (
+                <p className="mt-1 text-sm font-medium text-green-700">{discountLabel} • Limited-time price cut</p>
+              )}
 
               <button
                 onClick={handleAddToCart}

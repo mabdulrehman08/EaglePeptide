@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "../lib/supabase";
 import ProductCard from "../components/ProductCard";
 import { getProductDescription } from "../lib/productDescriptions";
+import { getFrontendPrice, getOriginalPrice } from "../lib/pricing";
 
 import retatrutide from "../assets/retatrutide.jpg";
 import mt2 from "../assets/mt2.jpg";
@@ -72,7 +73,7 @@ export default function Home() {
           .filter((item) => item.slug !== "glp-3")
           .map((item) => ({
             ...item,
-            price: item.slug === "bac-water" ? 10 : item.price,
+            price: getFrontendPrice(item.slug, item.price),
           }));
         setProducts(normalized);
       }
@@ -146,7 +147,8 @@ export default function Home() {
                   name={p.name}
                   dosage={p.dosage}
                   vials={p.vials}
-                  price={`$${p.price}`}
+                  price={p.price}
+                  originalPrice={getOriginalPrice(p.slug, p.price)}
                   slug={p.slug}
                   image={imageMap[p.slug] ?? retatrutide}
                   description={getProductDescription(p.slug, p.description)}
