@@ -4,7 +4,8 @@ type ProductCardProps = {
   name: string;
   dosage: string;
   vials: number;
-  price: string;
+  price: number;
+  originalPrice: number;
   slug: string;
   image: string;
   description?: string;
@@ -15,10 +16,13 @@ export default function ProductCard({
   dosage,
   vials,
   price,
+  originalPrice,
   slug,
   image,
   description,
 }: ProductCardProps) {
+  const hasDiscount = slug !== "bac-water" && originalPrice > price;
+
   return (
     <Link
       to={`/products/${slug}`}
@@ -50,9 +54,16 @@ export default function ProductCard({
       )}
 
       <div className="mt-3 pt-3 border-t border-slate-100 dark:border-gray-700 flex items-center justify-between">
-        <p className="text-xl font-bold text-slate-900 dark:text-white">{price}</p>
+        <div>
+          {hasDiscount && (
+            <p className="text-xs text-slate-500 dark:text-slate-400 line-through">
+              ${originalPrice.toFixed(2)}
+            </p>
+          )}
+          <p className="text-xl font-bold text-slate-900 dark:text-white">${price.toFixed(2)}</p>
+        </div>
         <span className="text-xs font-medium px-2 py-1 rounded-full bg-blue-50 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300">
-          Lab Use Only
+          {hasDiscount ? "Save $20" : "Lab Use Only"}
         </span>
       </div>
     </Link>

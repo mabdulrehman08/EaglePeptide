@@ -35,6 +35,20 @@ for (const key of REQUIRED_ENV) {
 }
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+const CHECKOUT_PRICE_OVERRIDES = {
+  retatrutide: 60,
+  "melanotan-ii": 20,
+  ipamorelin: 30,
+  "cjc-1295": 60,
+  "ghk-cu": 30,
+  "bpc-157": 40,
+  "bac-water": 10,
+};
+
+function getCheckoutPrice(slug, fallbackPrice) {
+  if (!slug) return fallbackPrice;
+  return CHECKOUT_PRICE_OVERRIDES[slug] ?? fallbackPrice;
+}
 
 const supabaseAdmin = createClient(
   process.env.SUPABASE_URL,
@@ -276,7 +290,7 @@ app.post("/create-checkout-session", async (req, res) => {
       const name = item.products?.name;
       const basePrice = item.products?.price;
       const slug = item.products?.slug;
-      const price = slug === "bac-water" ? 10 : basePrice;
+      const price = getCheckoutPrice(slug, basePrice);
       const quantity = item.quantity;
 
       if (!name || slug === "glp-3" || typeof price !== "number" || !Number.isFinite(price) || !Number.isInteger(quantity) || quantity < 1) {

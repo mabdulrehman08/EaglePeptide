@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../lib/supabase";
+import { getFrontendPrice, getOriginalPrice } from "../lib/pricing";
 
 type ProductRef = {
   name: string;
@@ -47,7 +48,7 @@ export default function Cart() {
           ...row,
           products: {
             ...row.products,
-            price: row.products.slug === "bac-water" ? 10 : row.products.price,
+            price: getFrontendPrice(row.products.slug, row.products.price),
           },
         }));
       setItems(priced);
@@ -145,6 +146,11 @@ export default function Cart() {
                   <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                     <div>
                       <p className="font-semibold text-gray-900 text-sm sm:text-base">{item.products.name}</p>
+                      {item.products.slug !== "bac-water" && (
+                        <p className="text-xs text-gray-400 mt-1 line-through">
+                          ${getOriginalPrice(item.products.slug, item.products.price).toFixed(2)} each
+                        </p>
+                      )}
                       <p className="text-xs text-gray-500 mt-1">${item.products.price.toFixed(2)} each</p>
 
                       <div className="flex items-center gap-3 mt-4">
