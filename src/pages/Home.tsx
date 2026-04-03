@@ -84,38 +84,38 @@ export default function Home() {
   }, []);
 
   return (
-    <main className="min-h-screen bg-white dark:bg-blue-950 overflow-x-hidden">
-      <section className="pt-12 pb-14 sm:pt-18 sm:pb-22 md:pt-24 md:pb-28 bg-gradient-to-b from-slate-100 via-white to-white dark:from-blue-900 dark:to-blue-950">
+    <main className="min-h-screen bg-[#f7f8fb] dark:bg-slate-950 overflow-x-hidden">
+      <section className="pt-12 pb-14 sm:pt-18 sm:pb-22 md:pt-24 md:pb-28 bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950">
         <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-16 items-center">
             <div className="text-center md:text-left space-y-6 md:space-y-8">
-              <p className="text-xs sm:text-sm uppercase tracking-[0.2em] text-blue-800 dark:text-blue-300 font-semibold">
-                US Manufactured • Research Use Only
+              <p className="text-xs sm:text-sm uppercase tracking-[0.24em] text-amber-300 font-semibold">
+                US Manufactured • Lab Grade • Research Use Only
               </p>
-              <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold leading-tight text-gray-900 dark:text-white">
-                Trusted & Certified <span className="text-slate-800 dark:text-slate-100">Research Peptide Supply</span>
+              <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold leading-tight text-white">
+                Premium <span className="text-amber-300">Research</span> Peptides
               </h1>
-              <p className="text-base sm:text-lg md:text-xl text-gray-600 dark:text-gray-400 max-w-xl mx-auto md:mx-0 leading-relaxed">
-                High-purity compounds with transparent labeling, reliable fulfillment, and secure checkout for serious research teams.
+              <p className="text-base sm:text-lg md:text-xl text-slate-300 max-w-xl mx-auto md:mx-0 leading-relaxed">
+                High-purity compounds with transparent labeling, COA-backed verification, and fast, reliable fulfillment.
               </p>
 
               <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start mt-6 sm:mt-8">
                 <a
                   href="#products"
-                  className="w-full sm:w-auto inline-flex items-center justify-center px-8 py-4 min-h-[52px] bg-slate-900 text-white rounded-lg font-semibold text-base sm:text-lg hover:bg-slate-800 transition shadow-md"
+                  className="w-full sm:w-auto inline-flex items-center justify-center px-8 py-4 min-h-[52px] bg-amber-300 text-slate-950 rounded-lg font-semibold text-base sm:text-lg hover:bg-amber-200 transition shadow-md"
                 >
                   Shop Products
                 </a>
                 <Link
                   to="/about"
-                  className="w-full sm:w-auto inline-flex items-center justify-center px-8 py-4 min-h-[52px] border border-slate-300 dark:border-gray-700 text-slate-700 dark:text-gray-300 rounded-lg font-medium text-base sm:text-lg hover:bg-slate-50 dark:hover:bg-gray-900 transition"
+                  className="w-full sm:w-auto inline-flex items-center justify-center px-8 py-4 min-h-[52px] border border-slate-500 text-slate-200 rounded-lg font-medium text-base sm:text-lg hover:bg-white/10 transition"
                 >
                   Learn More
                 </Link>
               </div>
             </div>
 
-            <div className="hidden md:flex rounded-2xl overflow-hidden items-center justify-center bg-white dark:bg-gray-900 border border-slate-200 dark:border-gray-800 w-full h-80 lg:h-[28rem] mx-auto shadow-sm">
+            <div className="hidden md:flex rounded-2xl overflow-hidden items-center justify-center bg-white border border-amber-300/40 w-full h-80 lg:h-[28rem] mx-auto shadow-2xl">
               <img
                 src={retatrutide}
                 alt="Featured Research Peptide"

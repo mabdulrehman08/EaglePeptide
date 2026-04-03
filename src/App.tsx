@@ -61,7 +61,7 @@ function App() {
     <div className="min-h-screen flex flex-col">
       <Navbar />
 
-      <main className="flex-1 pt-24 sm:pt-24">
+      <main className="flex-1 pt-32 sm:pt-36">
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/products/:slug" element={<ProductDetail />} />
