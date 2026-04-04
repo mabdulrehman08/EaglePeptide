@@ -84,38 +84,38 @@ export default function Home() {
   }, []);
 
   return (
-    <main className="min-h-screen bg-[#f7f8fb] dark:bg-slate-950 overflow-x-hidden">
-      <section className="pt-12 pb-14 sm:pt-18 sm:pb-22 md:pt-24 md:pb-28 bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950">
+    <main className="min-h-screen bg-white dark:bg-blue-950 overflow-x-hidden">
+      <section className="pt-12 pb-14 sm:pt-18 sm:pb-22 md:pt-24 md:pb-28 bg-gradient-to-b from-slate-100 via-white to-white dark:from-blue-900 dark:to-blue-950">
         <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-16 items-center">
             <div className="text-center md:text-left space-y-6 md:space-y-8">
-              <p className="text-xs sm:text-sm uppercase tracking-[0.24em] text-amber-300 font-semibold">
-                US Manufactured • Lab Grade • Research Use Only
+              <p className="text-xs sm:text-sm uppercase tracking-[0.2em] text-blue-800 dark:text-blue-300 font-semibold">
+                US Manufactured • Research Use Only
               </p>
-              <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold leading-tight text-white">
-                Premium <span className="text-amber-300">Research</span> Peptides
+              <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold leading-tight text-gray-900 dark:text-white">
+                Trusted & Certified <span className="text-slate-800 dark:text-slate-100">Research Peptide Supply</span>
               </h1>
-              <p className="text-base sm:text-lg md:text-xl text-slate-300 max-w-xl mx-auto md:mx-0 leading-relaxed">
-                High-purity compounds with transparent labeling, COA-backed verification, and fast, reliable fulfillment.
+              <p className="text-base sm:text-lg md:text-xl text-gray-600 dark:text-gray-400 max-w-xl mx-auto md:mx-0 leading-relaxed">
+                High-purity compounds with transparent labeling, reliable fulfillment, and secure checkout for serious research teams.
               </p>
 
               <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start mt-6 sm:mt-8">
                 <a
                   href="#products"
-                  className="w-full sm:w-auto inline-flex items-center justify-center px-8 py-4 min-h-[52px] bg-amber-300 text-slate-950 rounded-lg font-semibold text-base sm:text-lg hover:bg-amber-200 transition shadow-md"
+                  className="w-full sm:w-auto inline-flex items-center justify-center px-8 py-4 min-h-[52px] bg-slate-900 text-white rounded-lg font-semibold text-base sm:text-lg hover:bg-slate-800 transition shadow-md"
                 >
                   Shop Products
                 </a>
                 <Link
                   to="/about"
-                  className="w-full sm:w-auto inline-flex items-center justify-center px-8 py-4 min-h-[52px] border border-slate-500 text-slate-200 rounded-lg font-medium text-base sm:text-lg hover:bg-white/10 transition"
+                  className="w-full sm:w-auto inline-flex items-center justify-center px-8 py-4 min-h-[52px] border border-slate-300 dark:border-gray-700 text-slate-700 dark:text-gray-300 rounded-lg font-medium text-base sm:text-lg hover:bg-slate-50 dark:hover:bg-gray-900 transition"
                 >
                   Learn More
                 </Link>
               </div>
             </div>
 
-            <div className="hidden md:flex rounded-2xl overflow-hidden items-center justify-center bg-white border border-amber-300/40 w-full h-80 lg:h-[28rem] mx-auto shadow-2xl">
+            <div className="hidden md:flex rounded-2xl overflow-hidden items-center justify-center bg-white dark:bg-gray-900 border border-slate-200 dark:border-gray-800 w-full h-80 lg:h-[28rem] mx-auto shadow-sm">
               <img
                 src={retatrutide}
                 alt="Featured Research Peptide"
@@ -126,7 +126,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="products" className="pt-12 pb-16 sm:pt-16 sm:pb-20 lg:pt-20 lg:pb-24 bg-[#f7f8fb] dark:bg-slate-950">
+      <section id="products" className="pt-12 pb-16 sm:pt-16 sm:pb-20 lg:pt-20 lg:pb-24 bg-white dark:bg-blue-900">
         <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
           <h2 className="text-3xl sm:text-4xl font-bold mb-4 text-gray-900 dark:text-white text-center md:text-left">
             Research Products
@@ -163,12 +163,12 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="py-12 sm:py-16 bg-slate-100 dark:bg-slate-900/40 border-y border-slate-200 dark:border-slate-800">
+      <section className="py-12 sm:py-16 bg-blue-50 dark:bg-slate-900/40 border-y border-blue-100 dark:border-slate-800">
         <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {highlights.map((item) => (
-              <article key={item.title} className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6">
-                <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100">{item.title}</h3>
+              <article key={item.title} className="rounded-xl border border-blue-100 dark:border-slate-800 bg-white dark:bg-slate-900 p-6">
+                <h3 className="text-lg font-semibold text-blue-900 dark:text-blue-200">{item.title}</h3>
                 <p className="mt-3 text-sm leading-relaxed text-slate-700 dark:text-slate-300">{item.text}</p>
               </article>
             ))}
@@ -176,10 +176,10 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="py-12 sm:py-14 bg-[#f7f8fb] dark:bg-slate-950">
+      <section className="py-12 sm:py-14 bg-white dark:bg-blue-950">
         <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
-          <div className="rounded-2xl border border-slate-200 dark:border-slate-800 p-6 sm:p-8 bg-white dark:bg-slate-900">
-            <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-slate-100">Operations and Service Commitments</h2>
+          <div className="rounded-2xl border border-blue-100 dark:border-blue-800 p-6 sm:p-8 bg-white dark:bg-blue-900">
+            <h2 className="text-2xl sm:text-3xl font-bold text-blue-900 dark:text-blue-200">Operations and Service Commitments</h2>
             <ul className="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-3 text-slate-700 dark:text-slate-300 text-sm leading-relaxed">
               {serviceBenefits.map((item) => (
                 <li key={item}>• {item}</li>
@@ -189,7 +189,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="py-8 sm:py-10 bg-[#f7f8fb] dark:bg-slate-950">
+      <section className="py-8 sm:py-10 bg-white dark:bg-blue-950">
         <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
           <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-600 text-center max-w-4xl mx-auto leading-relaxed">
             ⚠️ Research Use Only: All products are intended strictly for laboratory, research, or analytical use.

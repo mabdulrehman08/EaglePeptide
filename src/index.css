@@ -1,20 +1,3 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-.marquee-track {
-  display: inline-flex;
-  align-items: center;
-  min-width: 200%;
-  white-space: nowrap;
-  animation: marquee-scroll 24s linear infinite;
-}
-
-@keyframes marquee-scroll {
-  from {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(-50%);
-  }
-}
