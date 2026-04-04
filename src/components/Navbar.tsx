@@ -23,14 +23,6 @@ function getDisplayName(session: Session | null) {
   return localPart || "Account";
 }
 
-const tickerItems = [
-  "RESEARCH PURPOSES ONLY",
-  "NOT FOR HUMAN CONSUMPTION",
-  "LAB-GRADE COMPOUNDS",
-  "COA VERIFICATION AVAILABLE",
-  "FAST USA SHIPPING",
-];
-
 export default function Navbar() {
   const [session, setSession] = useState<Session | null>(null);
   const [darkMode, setDarkMode] = useState(false);
@@ -84,33 +76,15 @@ export default function Navbar() {
 
   return (
     <nav
-      className="fixed top-0 left-0 right-0 z-50 bg-[#0f141c]/95 backdrop-blur-md border-b border-amber-400/20 shadow-lg"
+      className="fixed top-0 left-0 right-0 z-50 bg-blue-800/95 backdrop-blur-md border-b border-blue-700/70 shadow-sm"
       aria-label="Main navigation"
     >
-      <div className="h-8 bg-black text-[11px] text-amber-100/90 font-semibold uppercase tracking-[0.18em] overflow-hidden border-b border-amber-300/15">
-        <div className="marquee-track" aria-hidden="true">
-          {[...tickerItems, ...tickerItems].map((item, idx) => (
-            <span key={`${item}-${idx}`} className="mx-6 inline-block">
-              {item}
-            </span>
-          ))}
-        </div>
-      </div>
-
-      <div className="border-b border-amber-300/15 bg-gradient-to-r from-amber-300 via-yellow-200 to-amber-300 text-slate-900">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-2 text-center text-xs sm:text-sm font-bold">
-          <span className="uppercase tracking-[0.12em]">Limited Time Offer:</span>{" "}
-          <span className="font-black">10% OFF</span> with code{" "}
-          <span className="inline-flex items-center rounded-sm bg-slate-900 px-2 py-0.5 text-yellow-200">EAGLE10</span>
-        </div>
-      </div>
-
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <div className="flex items-center justify-between h-14 sm:h-16">
           <Link
             to="/"
             onClick={closeMenu}
-            className="flex items-center gap-2.5 focus:outline-none focus:ring-2 focus:ring-amber-300 rounded"
+            className="flex items-center gap-2.5 focus:outline-none focus:ring-2 focus:ring-slate-400 rounded"
             aria-label="Eagle Peptide Home"
           >
             <img
@@ -119,18 +93,18 @@ export default function Navbar() {
               className="h-8 sm:h-9 w-auto object-contain"
             />
             <span className="text-xl sm:text-2xl font-extrabold text-white tracking-tight">
-              Eagle<span className="text-amber-300">Peptide</span>
+              Eagle<span className="text-blue-200">Peptide</span>
             </span>
           </Link>
 
           <div className="hidden md:flex items-center gap-6 lg:gap-8 text-sm font-medium text-slate-300">
-            <Link to="/" className="hover:text-white transition-colors focus:text-white focus:outline-none focus:ring-2 focus:ring-amber-300 rounded px-1 py-1">Home</Link>
-            <Link to="/#products" className="hover:text-white transition-colors focus:text-white focus:outline-none focus:ring-2 focus:ring-amber-300 rounded px-1 py-1">Products</Link>
-            <Link to="/about" className="hover:text-white transition-colors focus:text-white focus:outline-none focus:ring-2 focus:ring-amber-300 rounded px-1 py-1">About</Link>
+            <Link to="/" className="hover:text-white transition-colors focus:text-white focus:outline-none focus:ring-2 focus:ring-slate-400 rounded px-1 py-1">Home</Link>
+            <Link to="/#products" className="hover:text-white transition-colors focus:text-white focus:outline-none focus:ring-2 focus:ring-slate-400 rounded px-1 py-1">Products</Link>
+            <Link to="/about" className="hover:text-white transition-colors focus:text-white focus:outline-none focus:ring-2 focus:ring-slate-400 rounded px-1 py-1">About</Link>
 
             <button
               onClick={toggleDark}
-              className="text-xl hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-amber-300 rounded p-1"
+              className="text-xl hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-slate-400 rounded p-1"
               title="Toggle dark mode"
               aria-label={darkMode ? "Switch to light mode" : "Switch to dark mode"}
             >
@@ -148,25 +122,25 @@ export default function Navbar() {
 
             {!session ? (
               <div className="flex items-center gap-5">
-                <Link to="/login" className="hover:text-white transition-colors focus:text-white focus:outline-none focus:ring-2 focus:ring-amber-300 rounded px-2 py-1">Login</Link>
-                <Link to="/signup" className="px-5 py-2 bg-amber-300 text-slate-950 rounded-md font-semibold hover:bg-amber-200 focus:bg-amber-200 focus:outline-none focus:ring-2 focus:ring-amber-300 transition-colors shadow-sm">Sign Up</Link>
+                <Link to="/login" className="hover:text-white transition-colors focus:text-white focus:outline-none focus:ring-2 focus:ring-slate-400 rounded px-2 py-1">Login</Link>
+                <Link to="/signup" className="px-5 py-2 bg-white text-slate-900 rounded-md font-semibold hover:bg-slate-100 focus:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-red-400 transition-colors shadow-sm">Sign Up</Link>
               </div>
             ) : (
               <div className="flex items-center gap-5">
-                <Link to="/cart" className="hover:text-white transition-colors focus:text-white focus:outline-none focus:ring-2 focus:ring-amber-300 rounded px-2 py-1">Cart</Link>
+                <Link to="/cart" className="hover:text-white transition-colors focus:text-white focus:outline-none focus:ring-2 focus:ring-slate-400 rounded px-2 py-1">Cart</Link>
                 {isAdmin && (
-                  <Link to="/admin" className="hover:text-white transition-colors focus:text-white focus:outline-none focus:ring-2 focus:ring-amber-300 rounded px-2 py-1">Dashboard</Link>
+                  <Link to="/admin" className="hover:text-white transition-colors focus:text-white focus:outline-none focus:ring-2 focus:ring-slate-400 rounded px-2 py-1">Dashboard</Link>
                 )}
                 <Link
                   to="/account"
-                  className="text-slate-300 hover:text-white transition-colors focus:text-white focus:outline-none focus:ring-2 focus:ring-amber-300 rounded px-2 py-1 max-w-[160px] truncate"
+                  className="text-slate-300 hover:text-white transition-colors focus:text-white focus:outline-none focus:ring-2 focus:ring-slate-400 rounded px-2 py-1 max-w-[160px] truncate"
                   title={displayName}
                 >
                   {displayName}
                 </Link>
                 <button
                   onClick={handleLogout}
-                  className="px-4 py-1.5 border border-amber-300/60 text-amber-100 rounded-md font-medium hover:bg-amber-200/10 hover:text-white hover:border-amber-300 focus:outline-none focus:ring-2 focus:ring-amber-300 transition-colors"
+                  className="px-4 py-1.5 border border-slate-500 text-slate-200 rounded-md font-medium hover:bg-slate-800 hover:text-white hover:border-slate-400 focus:outline-none focus:ring-2 focus:ring-red-400 transition-colors"
                 >
                   Logout
                 </button>
@@ -174,10 +148,10 @@ export default function Navbar() {
             )}
           </div>
 
-          <div className="flex md:hidden items-center gap-4 text-white">
+          <div className="flex md:hidden items-center gap-4">
             <button
               onClick={toggleDark}
-              className="text-xl hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-amber-300 rounded p-2"
+              className="text-xl hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-slate-400 rounded p-2"
               title="Toggle dark mode"
               aria-label={darkMode ? "Switch to light mode" : "Switch to dark mode"}
             >
@@ -195,7 +169,7 @@ export default function Navbar() {
 
             <button
               onClick={() => setMenuOpen(!menuOpen)}
-              className="p-2 rounded text-white focus:outline-none focus:ring-2 focus:ring-amber-300 touch-manipulation"
+              className="p-2 rounded focus:outline-none focus:ring-2 focus:ring-slate-400 touch-manipulation"
               aria-label="Toggle mobile menu"
               aria-expanded={menuOpen}
             >
@@ -213,36 +187,42 @@ export default function Navbar() {
         </div>
       </div>
 
+      <div className="border-t border-blue-700/70 bg-blue-900/95">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-2 text-center text-xs sm:text-sm text-blue-100 font-medium">
+          <span className="font-semibold text-white">10% Discount Coupon:</span> Use code <span className="font-bold text-yellow-300">EAGLE10</span> • Shipping now available in <span className="text-white">USA & UK</span>
+        </div>
+      </div>
+
       <div
         className={`
           md:hidden overflow-hidden transition-all duration-300 ease-in-out
           ${menuOpen ? "max-h-screen opacity-100" : "max-h-0 opacity-0"}
         `}
       >
-        <div className="px-4 pt-2 pb-5 bg-[#111723]/95 border-t border-amber-300/20 flex flex-col gap-2 text-base font-medium text-white">
-          <Link to="/" onClick={closeMenu} className="py-3 px-4 hover:bg-white/10 rounded-lg transition-colors focus:outline-none focus:bg-white/10">Home</Link>
-          <Link to="/#products" onClick={closeMenu} className="py-3 px-4 hover:bg-white/10 rounded-lg transition-colors focus:outline-none focus:bg-white/10">Products</Link>
-          <Link to="/about" onClick={closeMenu} className="py-3 px-4 hover:bg-white/10 rounded-lg transition-colors focus:outline-none focus:bg-white/10">About</Link>
+        <div className="px-4 pt-2 pb-5 bg-blue-800/95 border-t border-blue-700/70 flex flex-col gap-2 text-base font-medium text-white">
+          <Link to="/" onClick={closeMenu} className="py-3 px-4 hover:bg-blue-700/60 rounded-lg transition-colors focus:outline-none focus:bg-blue-700/60">Home</Link>
+          <Link to="/#products" onClick={closeMenu} className="py-3 px-4 hover:bg-blue-700/60 rounded-lg transition-colors focus:outline-none focus:bg-blue-700/60">Products</Link>
+          <Link to="/about" onClick={closeMenu} className="py-3 px-4 hover:bg-blue-700/60 rounded-lg transition-colors focus:outline-none focus:bg-blue-700/60">About</Link>
 
-          <div className="border-t border-amber-300/20 my-2 pt-4 flex flex-col gap-3">
+          <div className="border-t border-blue-700/70 my-2 pt-4 flex flex-col gap-3">
             {!session ? (
               <>
-                <Link to="/login" onClick={closeMenu} className="py-3 px-4 hover:bg-white/10 rounded-lg transition-colors focus:outline-none focus:bg-white/10">Login</Link>
-                <Link to="/signup" onClick={closeMenu} className="py-3 px-4 bg-amber-300 text-slate-900 rounded-lg font-semibold text-center hover:bg-amber-200 transition-colors focus:outline-none focus:ring-2 focus:ring-amber-300">Sign Up</Link>
+                <Link to="/login" onClick={closeMenu} className="py-3 px-4 hover:bg-blue-700/60 rounded-lg transition-colors focus:outline-none focus:bg-blue-700/60">Login</Link>
+                <Link to="/signup" onClick={closeMenu} className="py-3 px-4 bg-white text-blue-800 rounded-lg font-semibold text-center hover:bg-blue-50 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-300">Sign Up</Link>
               </>
             ) : (
               <>
-                <Link to="/cart" onClick={closeMenu} className="py-3 px-4 hover:bg-white/10 rounded-lg transition-colors focus:outline-none focus:bg-white/10">Cart</Link>
+                <Link to="/cart" onClick={closeMenu} className="py-3 px-4 hover:bg-blue-700/60 rounded-lg transition-colors focus:outline-none focus:bg-blue-700/60">Cart</Link>
                 {isAdmin && (
-                  <Link to="/admin" onClick={closeMenu} className="py-3 px-4 hover:bg-white/10 rounded-lg transition-colors focus:outline-none focus:bg-white/10">Dashboard</Link>
+                  <Link to="/admin" onClick={closeMenu} className="py-3 px-4 hover:bg-blue-700/60 rounded-lg transition-colors focus:outline-none focus:bg-blue-700/60">Dashboard</Link>
                 )}
-                <Link to="/account" onClick={closeMenu} className="py-3 px-4 hover:bg-white/10 rounded-lg transition-colors focus:outline-none focus:bg-white/10 truncate">{displayName}</Link>
+                <Link to="/account" onClick={closeMenu} className="py-3 px-4 hover:bg-blue-700/60 rounded-lg transition-colors focus:outline-none focus:bg-blue-700/60 truncate">{displayName}</Link>
                 <button
                   onClick={() => {
                     handleLogout();
                     closeMenu();
                   }}
-                  className="py-3 px-4 border border-amber-300/70 text-white rounded-lg font-medium hover:bg-white/10 hover:border-amber-200 focus:outline-none focus:ring-2 focus:ring-amber-300 transition-colors"
+                  className="py-3 px-4 border border-blue-500 text-white rounded-lg font-medium hover:bg-blue-700 hover:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-300 transition-colors"
                 >
                   Logout
                 </button>
