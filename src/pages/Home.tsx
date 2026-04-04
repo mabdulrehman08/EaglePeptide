@@ -126,7 +126,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="products" className="pt-12 pb-16 sm:pt-16 sm:pb-20 lg:pt-20 lg:pb-24 bg-white dark:bg-blue-900">
+      <section id="products" className="pt-12 pb-16 sm:pt-16 sm:pb-20 lg:pt-20 lg:pb-24 bg-[#f7f8fb] dark:bg-slate-950">
         <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
           <h2 className="text-3xl sm:text-4xl font-bold mb-4 text-gray-900 dark:text-white text-center md:text-left">
             Research Products
@@ -163,12 +163,12 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="py-12 sm:py-16 bg-blue-50 dark:bg-slate-900/40 border-y border-blue-100 dark:border-slate-800">
+      <section className="py-12 sm:py-16 bg-slate-100 dark:bg-slate-900/40 border-y border-slate-200 dark:border-slate-800">
         <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {highlights.map((item) => (
-              <article key={item.title} className="rounded-xl border border-blue-100 dark:border-slate-800 bg-white dark:bg-slate-900 p-6">
-                <h3 className="text-lg font-semibold text-blue-900 dark:text-blue-200">{item.title}</h3>
+              <article key={item.title} className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6">
+                <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100">{item.title}</h3>
                 <p className="mt-3 text-sm leading-relaxed text-slate-700 dark:text-slate-300">{item.text}</p>
               </article>
             ))}
@@ -176,10 +176,10 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="py-12 sm:py-14 bg-white dark:bg-blue-950">
+      <section className="py-12 sm:py-14 bg-[#f7f8fb] dark:bg-slate-950">
         <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
-          <div className="rounded-2xl border border-blue-100 dark:border-blue-800 p-6 sm:p-8 bg-white dark:bg-blue-900">
-            <h2 className="text-2xl sm:text-3xl font-bold text-blue-900 dark:text-blue-200">Operations and Service Commitments</h2>
+          <div className="rounded-2xl border border-slate-200 dark:border-slate-800 p-6 sm:p-8 bg-white dark:bg-slate-900">
+            <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-slate-100">Operations and Service Commitments</h2>
             <ul className="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-3 text-slate-700 dark:text-slate-300 text-sm leading-relaxed">
               {serviceBenefits.map((item) => (
                 <li key={item}>• {item}</li>
@@ -189,7 +189,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="py-8 sm:py-10 bg-white dark:bg-blue-950">
+      <section className="py-8 sm:py-10 bg-[#f7f8fb] dark:bg-slate-950">
         <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
           <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-600 text-center max-w-4xl mx-auto leading-relaxed">
             ⚠️ Research Use Only: All products are intended strictly for laboratory, research, or analytical use.
