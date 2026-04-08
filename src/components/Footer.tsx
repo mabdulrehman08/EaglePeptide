@@ -98,8 +98,8 @@ export default function Footer() {
         {/* Warning banner */}
         <div className="mt-6 sm:mt-8 bg-amber-100/10 border border-amber-500/30 rounded-lg px-4 py-3 text-amber-100 text-xs sm:text-sm">
           <p>
-            By purchasing from Eagle Peptide, you acknowledge responsibility for lawful handling and use in accordance
-            with all applicable regulations and laboratory standards.
+            Research Use Only: Products are sold strictly for laboratory and research purposes and are not for human
+            or animal consumption, medical use, or therapeutic applications.
           </p>
         </div>
 

@@ -16,7 +16,7 @@ export type ProductDescription = {
 };
 
 const DISCLAIMER =
-  "This product is intended strictly for laboratory research purposes only. It is not intended for human consumption, medical use, or diagnostic purposes.";
+  "All products are offered solely for research and development purposes and are not for human or animal consumption, medical, or therapeutic use. Products are not intended to diagnose, treat, cure, or prevent any disease, and statements on this site have not been evaluated by the U.S. Food and Drug Administration.";
 
 export const productDescriptions: Record<string, ProductDescription> = {
   retatrutide: {

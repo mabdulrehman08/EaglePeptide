@@ -154,10 +154,10 @@ export default function About() {
       <section className="py-10 sm:py-12 bg-blue-900 text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <p className="text-xs sm:text-sm leading-relaxed text-blue-100 text-center max-w-5xl mx-auto">
-            Research Use Only Disclaimer: Products sold on this website are intended strictly for laboratory,
-            research, or analytical purposes only. They are not for human or veterinary use, and are not intended
-            to diagnose, treat, cure, or prevent any disease. Statements on this site have not been evaluated by
-            the U.S. Food and Drug Administration.
+            Research Use Only Disclaimer: All products offered are solely for research and development purposes, not
+            for human or animal consumption, medical, or therapeutic applications. Products are not intended to
+            diagnose, treat, cure, or prevent any disease, and statements made on this website have not been evaluated
+            by the U.S. Food and Drug Administration.
           </p>
         </div>
       </section>
