@@ -189,7 +189,7 @@ export default function Navbar() {
 
       <div className="border-t border-blue-700/70 bg-blue-900/95">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-2 text-center text-xs sm:text-sm text-blue-100 font-medium">
-          <span className="font-semibold text-white">10% Discount Coupon:</span> Use code <span className="font-bold text-yellow-300">EAGLE10</span> • Shipping now available in <span className="text-white">USA & UK</span>
+          <span className="font-semibold text-white">15% Discount Coupon:</span> Use code <span className="font-bold text-yellow-300">EAGLE15</span> • Shipping now available in <span className="text-white">USA & UK</span>
         </div>
       </div>
 
