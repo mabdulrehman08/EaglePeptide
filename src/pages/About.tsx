@@ -74,7 +74,7 @@ export default function About() {
                 Shop Products
               </Link>
               <a
-                href="mailto:support@eaglepeptide.com"
+                href="mailto:eaglepeptide@gmail.com"
                 className="inline-flex items-center justify-center min-h-[48px] px-6 sm:px-8 py-3 border border-blue-300 dark:border-blue-700 text-blue-800 dark:text-blue-200 rounded-lg font-semibold hover:bg-blue-50 dark:hover:bg-blue-950 transition"
               >
                 Contact Support
