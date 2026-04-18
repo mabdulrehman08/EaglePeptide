@@ -38,8 +38,8 @@ export default function Footer() {
 
           <div className="space-y-2">
             <p className="font-semibold text-white">Contact</p>
-            <p className="text-slate-300">muhammadabdulrehman513@gmail.com</p>
-            <p className="text-slate-300">215-397-5020</p>
+            <p className="text-slate-300">eaglepeptide@gmail.com</p>
+            <p className="text-slate-300">+1 (443) 640-7918</p>
           </div>
 
           <div>
@@ -88,7 +88,7 @@ export default function Footer() {
         {/* Mobile contact CTA */}
         <div className="sm:hidden mt-4">
           <a
-            href="mailto:muhammadabdulrehman513@gmail.com"
+            href="mailto:eaglepeptide@gmail.com"
             className="block w-full text-center py-3 bg-white hover:bg-slate-100 text-slate-900 rounded-md font-semibold transition"
           >
             Contact Us by Email
